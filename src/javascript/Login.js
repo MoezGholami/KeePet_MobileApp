@@ -34,7 +34,7 @@ class Login extends Component<{}> {
                                    placeholder='password'>
                         </TextInput>
                         <View style={styles.buttonContainer}>
-                            <TouchableOpacity style={styles.button} onPress={ this.login }>
+                            <TouchableOpacity style={styles.button} onPress={ this.signUp }>
                                 <Text style={styles.buttonText}>
                                     Sign up
                                 </Text>
@@ -76,12 +76,35 @@ class Login extends Component<{}> {
                 }
                 else
                 {
-                    AsyncStorage.setItem('jwt', res.token);
+                    AsyncStorage.setItem('user', res.token);
                     navigate('HomePage');
                 }
             })
             .catch((error) => {
                 console.log(error);
+            })
+            .done();
+    };
+
+    signUp = () => {
+        const { navigate } = this.props.navigation;
+        fetch(Constant.urlBase + 'api/owner/register', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: this.state.username,
+                password: this.state.password,
+            })
+        })
+            .then((response) => response.json())
+            .then(() => {
+                alert('Success! You may now log in.');
+            })
+            .catch((error) => {
+                alert('Please try another username.');
             })
             .done();
     }
