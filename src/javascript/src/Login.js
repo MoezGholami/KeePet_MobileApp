@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Button } from 'native-base';
 import Constant from './Constant';
+import { NavigationActions } from 'react-navigation';
 import {
     AsyncStorage,
     Platform,
@@ -14,14 +15,12 @@ import {
 
 class Login extends Component<{}> {
     render() {
+        const { navigate } = this.props.navigation;
         return (
             <View style={styles.container}>
-                <Image style={styles.backgroundImage} source={require('../image/background.jpg')}>
+                <Image style={styles.backgroundImage} source={require('../../image/login.jpg')}>
                 </Image>
                 <View style={styles.content}>
-                    <Text style={styles.welcome}>
-                        Welcome to KeePet!
-                    </Text>
                     <View style={styles.inputContainer}>
                         <TextInput style={styles.input}
                                    onChangeText={(username) => this.setState({username})}
@@ -76,8 +75,15 @@ class Login extends Component<{}> {
                 }
                 else
                 {
-                    AsyncStorage.setItem('user', res.token);
-                    navigate('HomePage');
+                    console.log(res.jwt);
+                    AsyncStorage.setItem('username', res.username);
+                    AsyncStorage.setItem('jwt', res.jwt);
+                    this.props.navigation.dispatch(NavigationActions.reset({
+                        index: 0,
+                        actions: [
+                            NavigationActions.navigate({routeName: 'Home'})
+                        ]
+                    }));
                 }
             })
             .catch((error) => {
@@ -87,7 +93,6 @@ class Login extends Component<{}> {
     };
 
     signUp = () => {
-        const { navigate } = this.props.navigation;
         fetch(Constant.urlBase + 'api/owner/register', {
             method: 'POST',
             headers: {
@@ -99,12 +104,27 @@ class Login extends Component<{}> {
                 password: this.state.password,
             })
         })
-            .then((response) => response.json())
-            .then(() => {
+            .then((response) => {
+            response.json();
+            if(response.status === 400) {
+                alert('You should try another username.')
+            } else {
                 alert('Success! You may now log in.');
-            })
+            }
+        })
+            // .then(()=>{
+            //     console.log(response)
+            // })
+            // .then((res) => {
+            //     if(res.error) {
+            //         console.log(error)
+            //         alert('You should try another username.')
+            //     } else {
+            //         alert('Success! You may now log in.');
+            //     }
+            // })
             .catch((error) => {
-                alert('Please try another username.');
+                alert('Something went wrong.');
             })
             .done();
     }
@@ -120,12 +140,6 @@ const styles = StyleSheet.create({
     content: {
         position: 'absolute',
         justifyContent: 'center',
-    },
-    welcome: {
-        fontSize: 30,
-        textAlign: 'center',
-        backgroundColor: 'rgba(0,0,0,0)',
-        margin: 10,
     },
     buttonContainer: {
         flex: 1,

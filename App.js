@@ -1,18 +1,12 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import Login from './src/javascript/Login';
-import Home from './src/javascript/Home';
-import { StackNavigator } from 'react-navigation';
+import Splash from './src/javascript/src/Splash';
 
-const NavigationApp = StackNavigator({
-    Home: {screen: Login},
-    HomePage: {screen: Home},
-});
 
 export default class App extends React.Component {
     render() {
         return (
-          <NavigationApp />
+            <Splash />
         );
     }
 }

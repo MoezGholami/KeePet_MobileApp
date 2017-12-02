@@ -18,17 +18,16 @@ class Home extends Component<{}> {
         this._loadInitialState().done;
     }
     _loadInitialState = async() => {
-        var user = await AsyncStorage.getItem('user');
+        var user = await AsyncStorage.getItem('username');
         if(user !== null) {
-            console.log(user);
-            this.setState({username: user.username});
+            this.setState({username: user});
         }
     }
     render() {
         return (
             <View style={styles.container}>
                 <Text style={styles.welcome}>
-                    Hello! {this.state.username}
+                    Hello! {this.state.username}!
                 </Text>
                 <Text style={styles.welcome}>
                     Welcome to React Native!
