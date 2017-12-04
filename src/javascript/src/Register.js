@@ -19,6 +19,9 @@ class Login extends Component<{}> {
         this.state = {
             username: '',
             password: '',
+            email: '',
+            firstName: '',
+            lastName: '',
         };
     }
 
@@ -41,10 +44,25 @@ class Login extends Component<{}> {
                                    secureTextEntry={true}
                                    placeholder='Password'>
                         </TextInput>
+                        <TextInput style={styles.input}
+                                   onChangeText={(email) => this.setState({email})}
+                                   value = {this.state.email}
+                                   placeholder='Email Address'>
+                        </TextInput>
+                        <TextInput style={styles.input}
+                                   onChangeText={(firstName) => this.setState({firstName})}
+                                   value = {this.state.firstName}
+                                   placeholder='First Name'>
+                        </TextInput>
+                        <TextInput style={styles.input}
+                                   onChangeText={(lastName) => this.setState({lastName})}
+                                   value = {this.state.lastName}
+                                   placeholder='Last Name'>
+                        </TextInput>
                         <View style={styles.buttonContainer}>
-                            <TouchableOpacity style={styles.button} onPress={ this.login }>
+                            <TouchableOpacity style={styles.button} onPress={ this.signUp }>
                                 <Text style={styles.buttonText}>
-                                    Log in
+                                    Sign up
                                 </Text>
                             </TouchableOpacity>
                         </View>
@@ -54,9 +72,8 @@ class Login extends Component<{}> {
         );
     }
 
-    login = () => {
-        const { navigate } = this.props.navigation;
-        fetch(Constant.urlBase + 'api/owner/login', {
+    signUp = () => {
+        fetch(Constant.urlBase + 'api/owner/register', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -65,32 +82,25 @@ class Login extends Component<{}> {
             body: JSON.stringify({
                 username: this.state.username,
                 password: this.state.password,
-
+                email: this.state.email,
+                firstName: this.state.firstName,
+                lastName: this.state.lastName,
             })
         })
-            .then((response) => response.json())
-            .then((res) => {
-                if(res.error) {
-                    alert("Please log in again.");
-                }
-                else
-                {
-                    console.log(res.jwt);
-                    AsyncStorage.setItem('username', res.username);
-                    AsyncStorage.setItem('jwt', res.jwt);
-                    AsyncStorage.setItem('nextScreen', 'Profile');
-                    this.props.navigation.dispatch(NavigationActions.reset({
-                        index: 0,
-                        actions: [NavigationActions.navigate({routeName: 'Profile'})]
-                        })
-                    )
+            .then((response) => {
+                response.json();
+                if(response.status === 400) {
+                    alert('You should try another username.')
+                } else {
+                    alert('Success! You may now log in.');
+                    this.props.navigation.navigate('Login');
                 }
             })
             .catch((error) => {
-                console.log(error);
+                alert('Something went wrong.');
             })
             .done();
-    };
+    }
 }
 
 const styles = StyleSheet.create({
@@ -132,7 +142,6 @@ const styles = StyleSheet.create({
         borderColor: '#FFFFFF',
         padding: 20,
         alignSelf: 'stretch',
-        flex: 1,
     },
     input: {
         height: 40,

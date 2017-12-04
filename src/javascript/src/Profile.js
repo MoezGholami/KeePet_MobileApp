@@ -43,6 +43,10 @@ class Profile extends Component<{}> {
         }
     }
 
+    _onPressRegister() {
+        this.props.navigation.navigate('Register');
+    }
+
     _onPressPost() {
         this.props.navigation.navigate('Post');
     }
@@ -52,6 +56,11 @@ class Profile extends Component<{}> {
         let profile = null;
         if(this.state.isLoggedIn) {
             profile = <View style={styles.container}>
+                <TouchableOpacity style={styles.button} onPress={() => this._onPressRegister()}>
+                    <Text style={styles.buttonText}>
+                        Sign up
+                    </Text>
+                </TouchableOpacity>
                 <TouchableOpacity style={styles.button} onPress={() => this._onPressButton()}>
                     <Text style={styles.buttonText}>
                         Sign out
@@ -65,9 +74,14 @@ class Profile extends Component<{}> {
             </View>
         } else {
             profile = <View style={styles.container}>
+                <TouchableOpacity style={styles.button} onPress={() => this._onPressRegister()}>
+                    <Text style={styles.buttonText}>
+                        Sign up
+                    </Text>
+                </TouchableOpacity>
                 <TouchableOpacity style={styles.button} onPress={() => this._onPressButton()}>
                     <Text style={styles.buttonText}>
-                        Sign in / Sign up
+                        Sign in
                     </Text>
                 </TouchableOpacity>
             </View>
