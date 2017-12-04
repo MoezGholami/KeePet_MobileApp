@@ -35,38 +35,45 @@ class Profile extends Component<{}> {
             this.props.navigation.dispatch(NavigationActions.reset({
                 index: 0,
                 actions: [
-                    NavigationActions.navigate({routeName: 'Home'})
+                    NavigationActions.navigate({routeName: 'Profile'})
                 ]
             }));
         } else {
             this.props.navigation.navigate('Login');
         }
-        //this.props.navigation.navigate('Profile');
+    }
+
+    _onPressPost() {
+        this.props.navigation.navigate('Post');
     }
 
     render() {
 
-        let button = null;
+        let profile = null;
         if(this.state.isLoggedIn) {
-            button = <TouchableOpacity style={styles.button} onPress={() => this._onPressButton()}>
-                <Text style={styles.buttonText}>
-                    Sign out
-                </Text>
-            </TouchableOpacity>
+            profile = <View style={styles.container}>
+                <TouchableOpacity style={styles.button} onPress={() => this._onPressButton()}>
+                    <Text style={styles.buttonText}>
+                        Sign out
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button2} onPress={() => this._onPressPost()}>
+                    <Text style={styles.buttonText}>
+                        Post a Request
+                    </Text>
+                </TouchableOpacity>
+            </View>
         } else {
-            button = <TouchableOpacity style={styles.button} onPress={() => this._onPressButton()}>
-                <Text style={styles.buttonText}>
-                    Sign in
-                </Text>
-            </TouchableOpacity>
+            profile = <View style={styles.container}>
+                <TouchableOpacity style={styles.button} onPress={() => this._onPressButton()}>
+                    <Text style={styles.buttonText}>
+                        Sign in / Sign up
+                    </Text>
+                </TouchableOpacity>
+            </View>
         }
         return (
-            <View style={styles.container}>
-                <Text>
-                    This is profile
-                </Text>
-                {button}
-            </View>
+            profile
         );
     }
 }
@@ -79,6 +86,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#F5FCFF',
     },
     button: {
+        backgroundColor: '#2980b9',
+        paddingVertical: 5,
+        marginTop: 5,
+        width: '45%',
+    },
+    button2: {
         backgroundColor: '#2980b9',
         paddingVertical: 5,
         marginTop: 5,

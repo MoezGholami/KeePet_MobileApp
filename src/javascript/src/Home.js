@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Constant from './Constant';
+import { NavigationActions } from 'react-navigation';
 import {
     Text,
     View,

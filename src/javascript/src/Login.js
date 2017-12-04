@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button } from 'native-base';
+import { Container, Header, Content, Form, Item, Input, Label } from 'native-base'
 import Constant from './Constant';
 import { NavigationActions } from 'react-navigation';
 import {
@@ -78,12 +78,12 @@ class Login extends Component<{}> {
                     console.log(res.jwt);
                     AsyncStorage.setItem('username', res.username);
                     AsyncStorage.setItem('jwt', res.jwt);
+                    AsyncStorage.setItem('nextScreen', 'Profile');
                     this.props.navigation.dispatch(NavigationActions.reset({
                         index: 0,
-                        actions: [
-                            NavigationActions.navigate({routeName: 'Home'})
-                        ]
-                    }));
+                        actions: [NavigationActions.navigate({routeName: 'Profile'})]
+                        })
+                    )
                 }
             })
             .catch((error) => {
@@ -105,24 +105,13 @@ class Login extends Component<{}> {
             })
         })
             .then((response) => {
-            response.json();
-            if(response.status === 400) {
-                alert('You should try another username.')
-            } else {
-                alert('Success! You may now log in.');
-            }
-        })
-            // .then(()=>{
-            //     console.log(response)
-            // })
-            // .then((res) => {
-            //     if(res.error) {
-            //         console.log(error)
-            //         alert('You should try another username.')
-            //     } else {
-            //         alert('Success! You may now log in.');
-            //     }
-            // })
+                response.json();
+                if(response.status === 400) {
+                    alert('You should try another username.')
+                } else {
+                    alert('Success! You may now log in.');
+                }
+            })
             .catch((error) => {
                 alert('Something went wrong.');
             })
