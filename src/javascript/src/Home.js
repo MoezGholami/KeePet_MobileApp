@@ -8,6 +8,7 @@ import {
     TouchableOpacity,
     AsyncStorage,
     AppRegistry,
+    Image,
 } from 'react-native';
 import Splash from "./Splash";
 
@@ -51,12 +52,16 @@ class Home extends Component<{}> {
     render() {
         return (
             <View style={styles.container}>
-                <Text>
-                    {'Hello '+ this.state.username}
-                </Text>
-                <Text>
-                    This is home
-                </Text>
+                <Image style={styles.backgroundImage} source={require('../../image/main.jpg')}>
+                    <View style={styles.content}>
+                        <Text>
+                            {'Hello '+ this.state.username}
+                        </Text>
+                        <Text>
+                            This is home
+                        </Text>
+                    </View>
+                </Image>
             </View>
         );
     }
@@ -65,10 +70,19 @@ class Home extends Component<{}> {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    backgroundImage: {
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#F5FCFF',
+        width: null,
+        height: null,
+        flex: 1,
     },
+    content: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'transparent'
+    }
 });
 
 

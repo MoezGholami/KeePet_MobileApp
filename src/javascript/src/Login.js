@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Header, Content, Form, Item, Input, Label } from 'native-base'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Constant from './Constant';
 import { NavigationActions } from 'react-navigation';
 import {
@@ -70,24 +70,25 @@ class Login extends Component<{}> {
         })
             .then((response) => response.json())
             .then((res) => {
+                console.log(res)
                 if(res.error) {
                     alert("Please log in again.");
                 }
                 else
                 {
-                    console.log(res.jwt);
                     AsyncStorage.setItem('username', res.username);
                     AsyncStorage.setItem('jwt', res.jwt);
-                    AsyncStorage.setItem('nextScreen', 'Profile');
+                    AsyncStorage.setItem('firstName', res.firstName);
+                    AsyncStorage.setItem('lastName', res.lastName);
+                    AsyncStorage.setItem('email', res.email);
+                    AsyncStorage.setItem('bio', res.bio);
+                    AsyncStorage.setItem('user_id', res.user_id);
                     this.props.navigation.dispatch(NavigationActions.reset({
-                        index: 0,
-                        actions: [NavigationActions.navigate({routeName: 'Profile'})]
+                            index: 0,
+                            actions: [NavigationActions.navigate({routeName: 'Profile'})]
                         })
                     )
                 }
-            })
-            .catch((error) => {
-                console.log(error);
             })
             .done();
     };

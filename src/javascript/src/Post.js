@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Moment from 'moment';
 import { CheckBox } from 'react-native-elements'
 import Constant from './Constant'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {
     StyleSheet,
     Text,
@@ -114,6 +115,7 @@ class Post extends Component {
             pets.push(
                 <CheckBox
                     left
+                    style={{backgroundColor: 'transparent'}}
                     key={this.state.pets[i]}
                     title={this.state.pets[i]}
                     checkedIcon='dot-circle-o'
@@ -138,81 +140,84 @@ class Post extends Component {
             )
         }
         return (
-            <View>
+            <View style={styles.container}>
                 <Image style={styles.backgroundImage} source={require('../../image/main.jpg')}>
-                </Image>
-                <ScrollView contentContainerStyle={styles.contentContainer}>
-                    <Text style={styles.text}>
-                        Please list the categories of pets you have
-                    </Text>
-                    <View style={styles.checkBoxContainer}>
-                        <View style={styles.checkBox}>
-                            { pets }
-                        </View>
-                    </View>
-                    <Text style={styles.break}>
-                        {"\n"}
-                    </Text>
-                    <View style={styles.border} />
-
-                    <Text style={styles.text}>
-                        Please select your preferred start and end date
-                    </Text>
-                    <CalendarPicker
-                        startFromMonday={true}
-                        allowRangeSelection={true}
-                        minDate={minDate}
-                        maxDate={maxDate}
-                        todayBackgroundColor="#d7e6f2"
-                        selectedDayColor="#72cee3"
-                        selectedDayTextColor="#FFFFFF"
-                        onDateChange={this.onDateChange}
-                    />
-                    <View>
-                        <Text>Selected start date: { startDate }</Text>
-                        <Text>Selected end date: { endDate }</Text>
-                    </View>
-                    <Text style={styles.break}>
-                        {"\n"}
-                    </Text>
-                    <View style={styles.border} />
-
-                    <Text style={styles.text}>
-                        Please add a description of your post
-                    </Text>
-                    <TextInput style={styles.input}
-                               multiline={true}
-                               blurOnSubmit={false}
-                               onChangeText={(description) => this.setState({description})}
-                               value = {this.state.description}
-                               placeholder='description'>
-                    </TextInput>
-                    <Text style={styles.break}>
-                        {"\n"}
-                    </Text>
-                    <View style={styles.border} />
-
-                    <Text style={styles.text}>
-                        Select the add on selections
-                    </Text>
-                    <View style={styles.checkBoxContainer}>
-                        <View style={styles.checkBox}>
-                            { checkBox }
-                        </View>
-                    </View>
-                    <Text style={styles.break}>
-                        {"\n"}
-                    </Text>
-                    <View style={styles.border} />
-
-                    <View style={styles.buttonContainer}>
-                        <TouchableOpacity style={styles.button} onPress={ this.send }>
-                            <Text style={styles.buttonText}>
-                                post
+                    <KeyboardAwareScrollView>
+                        <ScrollView contentContainerStyle={styles.contentContainer}>
+                            <Text style={styles.textHeader}>
+                                Please list the categories of pets you have
                             </Text>
-                        </TouchableOpacity>
-                    </View>
-                </ScrollView>
+                            <View style={styles.checkBoxContainer}>
+                                <View style={styles.checkBox}>
+                                    { pets }
+                                </View>
+                            </View>
+                            <Text style={styles.break}>
+                                {"\n"}
+                            </Text>
+                            <View style={styles.border} />
+
+                            <Text style={styles.text}>
+                                Please select your preferred start and end date
+                            </Text>
+                            <CalendarPicker
+                                startFromMonday={true}
+                                allowRangeSelection={true}
+                                minDate={minDate}
+                                maxDate={maxDate}
+                                todayBackgroundColor="#d7e6f2"
+                                selectedDayColor="#72cee3"
+                                selectedDayTextColor="#FFFFFF"
+                                onDateChange={this.onDateChange}
+                            />
+                            <View>
+                                <Text>Selected start date: { startDate }</Text>
+                                <Text>Selected end date: { endDate }</Text>
+                            </View>
+                            <Text style={styles.break}>
+                                {"\n"}
+                            </Text>
+                            <View style={styles.border} />
+
+                            <Text style={styles.text}>
+                                Please add a description of your post
+                            </Text>
+                            <TextInput style={styles.input}
+                                       multiline={true}
+                                       blurOnSubmit={false}
+                                       onChangeText={(description) => this.setState({description})}
+                                       value = {this.state.description}
+                                       placeholder='description'>
+                            </TextInput>
+                            <Text style={styles.break}>
+                                {"\n"}
+                            </Text>
+                            <View style={styles.border} />
+
+                            <Text style={styles.text}>
+                                Select the add on selections
+                            </Text>
+                            <View style={styles.checkBoxContainer}>
+                                <View style={styles.checkBox}>
+                                    { checkBox }
+                                </View>
+                            </View>
+                            <Text style={styles.break}>
+                                {"\n"}
+                            </Text>
+                            <View style={styles.border} />
+                            <Text style={styles.break}>
+                                {"\n"}
+                            </Text>
+
+                            <TouchableOpacity style={styles.button} onPress={ this.send }>
+                                <Text style={styles.buttonText}>
+                                    post
+                                </Text>
+                            </TouchableOpacity>
+                        </ScrollView>
+                    </KeyboardAwareScrollView>
+                </Image>
             </View>
         );
     }
@@ -220,7 +225,9 @@ class Post extends Component {
 
 const styles = StyleSheet.create({
     contentContainer: {
-        backgroundColor: '#F5FCFF',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'transparent'
     },
     checkBoxContainer: {
         flex: 1,
@@ -228,24 +235,35 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     checkBox: {
-        width: '100%'
+        width: '100%',
+        backgroundColor: 'transparent',
     },
     container: {
-        position: 'absolute',
-        justifyContent: 'center',
-        alignItems: 'stretch',
+        flex: 1,
+        // position: 'absolute',
+        // justifyContent: 'center',
+        // alignItems: 'stretch',
     },
     backgroundImage: {
+        // flex: 1,
+        // width: null,
+        // height: 250,
+        // alignSelf: 'stretch',
+        width: null,
+        height: null,
         flex: 1,
-        //width: null,
-        height: 100,
-        alignSelf: 'stretch',
-        //resizeMode: 'contain',
     },
     text: {
         fontSize: 20,
         backgroundColor: 'rgba(0,0,0,0)',
         margin: 10,
+        paddingTop: 15,
+    },
+    textHeader: {
+        fontSize: 20,
+        backgroundColor: 'rgba(0,0,0,0)',
+        margin: 10,
+        paddingTop: 80,
     },
     break: {
         backgroundColor: 'rgba(0,0,0,0)',
@@ -253,35 +271,30 @@ const styles = StyleSheet.create({
     border: {
         borderBottomColor: 'black',
         borderBottomWidth: 2,
+        alignSelf: 'stretch',
     },
     input: {
         height: 200,
-        padding: 20,
+        padding: 10,
         fontSize: 16,
+        width: '80%',
         backgroundColor: 'rgba(255,255,255,1)',
         marginBottom: 10,
+        borderWidth: 1,
     },
     button: {
         backgroundColor: '#2980b9',
         paddingVertical: 5,
-        marginTop: 5,
-        width: '45%',
+        justifyContent: 'center',
+        width: '60%',
+        height: 40,
+        marginBottom: 30,
     },
     buttonText: {
         textAlign: 'center',
         color: '#FFFFFF',
+        fontSize: 20,
     },
-    buttonContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingVertical: 20,
-        marginBottom: 10,
-    },
-    // imageContainer: {
-    //     justifyContent: 'center',
-    //     alignItems: 'center',
-    // }
 });
 
 export default Post;

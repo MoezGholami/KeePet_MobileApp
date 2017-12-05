@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Header, Content, Form, Item, Input, Label } from 'native-base'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Constant from './Constant';
 import { NavigationActions } from 'react-navigation';
 import {
@@ -32,43 +32,46 @@ class Login extends Component<{}> {
                 <Image style={styles.backgroundImage} source={require('../../image/login.jpg')}>
                 </Image>
                 <View style={styles.content}>
-                    <View style={styles.inputContainer}>
-                        <TextInput style={styles.input}
-                                   onChangeText={(username) => this.setState({username})}
-                                   value = {this.state.username}
-                                   placeholder='Username'>
-                        </TextInput>
-                        <TextInput style={styles.input}
-                                   onChangeText={(password) => this.setState({password})}
-                                   value = {this.state.password}
-                                   secureTextEntry={true}
-                                   placeholder='Password'>
-                        </TextInput>
-                        <TextInput style={styles.input}
-                                   onChangeText={(email) => this.setState({email})}
-                                   value = {this.state.email}
-                                   placeholder='Email Address'>
-                        </TextInput>
-                        <TextInput style={styles.input}
-                                   onChangeText={(firstName) => this.setState({firstName})}
-                                   value = {this.state.firstName}
-                                   placeholder='First Name'>
-                        </TextInput>
-                        <TextInput style={styles.input}
-                                   onChangeText={(lastName) => this.setState({lastName})}
-                                   value = {this.state.lastName}
-                                   placeholder='Last Name'>
-                        </TextInput>
-                        <View style={styles.buttonContainer}>
-                            <TouchableOpacity style={styles.button} onPress={ this.signUp }>
-                                <Text style={styles.buttonText}>
-                                    Sign up
-                                </Text>
-                            </TouchableOpacity>
+                    <KeyboardAwareScrollView>
+                        <View style={styles.inputContainer}>
+                            <TextInput style={styles.input}
+                                       onChangeText={(username) => this.setState({username})}
+                                       value = {this.state.username}
+                                       placeholder='Username'>
+                            </TextInput>
+                            <TextInput style={styles.input}
+                                       onChangeText={(password) => this.setState({password})}
+                                       value = {this.state.password}
+                                       secureTextEntry={true}
+                                       placeholder='Password'>
+                            </TextInput>
+                            <TextInput style={styles.input}
+                                       onChangeText={(email) => this.setState({email})}
+                                       value = {this.state.email}
+                                       placeholder='Email Address'>
+                            </TextInput>
+                            <TextInput style={styles.input}
+                                       onChangeText={(firstName) => this.setState({firstName})}
+                                       value = {this.state.firstName}
+                                       placeholder='First Name'>
+                            </TextInput>
+                            <TextInput style={styles.input}
+                                       onChangeText={(lastName) => this.setState({lastName})}
+                                       value = {this.state.lastName}
+                                       placeholder='Last Name'>
+                            </TextInput>
+                            <View style={styles.buttonContainer}>
+                                <TouchableOpacity style={styles.button} onPress={ this.signUp }>
+                                    <Text style={styles.buttonText}>
+                                        Sign up
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
-                    </View>
+                    </KeyboardAwareScrollView>
                 </View>
             </View>
+
         );
     }
 
@@ -93,7 +96,11 @@ class Login extends Component<{}> {
                     alert('You should try another username.')
                 } else {
                     alert('Success! You may now log in.');
-                    this.props.navigation.navigate('Login');
+                    this.props.navigation.dispatch(NavigationActions.reset({
+                            index: 0,
+                            actions: [NavigationActions.navigate({routeName: 'Profile'})]
+                        })
+                    )
                 }
             })
             .catch((error) => {

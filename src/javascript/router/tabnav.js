@@ -46,16 +46,30 @@ const TabNav = TabNavigator({
             <MaterialIcons name='account-box' size={32} color='#2980b9'/>,
     }},
 },{
-    tabBarPosition: 'bottom',
-    swipeEnabled: true,
+    initialRouteName: 'Home',
+    animationEnabled: false,
+    swipeEnabled: false,
+    lazyLoad: true,
     tabBarOptions: {
         activeTintColor: '#000000',
-        activeBackgroundColor: '#cae2da',
+        activeBackgroundColor: '#ecfff6',
         inactiveTintColor: '#000000',
-        inactiveBackgroundColor: '#FFFFFF',
+        showIcon: true,
+        showLabel: true,
+        lazyLoad: true,
+        upperCaseLabel: false,
+        indicatorStyle: {
+            backgroundColor: 'transparent'
+        },
+        style: {
+            backgroundColor: 'rgba(22, 22, 22, 0.1)',
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            bottom: 0
+        },
         labelStyle: {
             fontSize: 12,
-
         }
     }
 });
