@@ -15,7 +15,7 @@ import Splash from "./Splash";
 class Home extends Component<{}> {
 
     state = {
-        username: '',
+        firstName: '',
     };
 
     componentWillMount() {
@@ -23,9 +23,9 @@ class Home extends Component<{}> {
     };
 
     _loadInitialState = async() => {
-        var user = await AsyncStorage.getItem('username');
+        var user = await AsyncStorage.getItem('firstName');
         if(user !== null) {
-            this.setState({username: user});
+            this.setState({firstName: user});
         }
         /*AsyncStorage.getItem('jwt', (err, token) => {
             fetch(Constant.urlBase + 'api/owner/verify', {
@@ -55,7 +55,7 @@ class Home extends Component<{}> {
                 <Image style={styles.backgroundImage} source={require('../../image/main.jpg')}>
                     <View style={styles.content}>
                         <Text>
-                            {'Hello '+ this.state.username}
+                            {'Hello '+ this.state.firstName}
                         </Text>
                         <Text>
                             This is home

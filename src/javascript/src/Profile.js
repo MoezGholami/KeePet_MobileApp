@@ -12,12 +12,12 @@ import {
 class Profile extends Component<{}> {
 
     state = {
-        username: '',
         isLoggedIn: false,
         firstName: '',
         lastName: '',
         email: '',
         bio: '',
+        picture: '',
     };
 
     componentDidMount() {
@@ -25,36 +25,49 @@ class Profile extends Component<{}> {
     };
 
     _loadInitialState = async() => {
-        let username = await AsyncStorage.getItem('username');
-        let firstName = await AsyncStorage.getItem('firstName');
-        let lastName = await AsyncStorage.getItem('lastName');
-        let email = await AsyncStorage.getItem('email');
-        let bio = await AsyncStorage.getItem('bio');
-        if(username !== null) {
-            this.setState({
-                username: username,
-                isLoggedIn: true,
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
-            });
-            if(bio !== '') {
-                this.setState({bio: bio})
-            } else {
-                this.setState({bio: 'Your haven\'t added your bio'})
+        var user_id = await AsyncStorage.getItem('user_id');
+        AsyncStorage.getItem('user_id', (error, text)=>{
+            if(text !== null) {
+                this.setState({isLoggedIn: true});
             }
-        }
+        });
+        AsyncStorage.getItem('firstName', (error, text)=>{
+            if(text !== null) {
+                this.setState({firstName: text});
+            }
+        });
+        AsyncStorage.getItem('lastName', (error, text)=>{
+            if(text !== null) {
+                this.setState({lastName: text});
+            }
+        });
+        AsyncStorage.getItem('email', (error, text)=>{
+            if(text !== null) {
+                this.setState({email: text});
+            }
+        });
+        AsyncStorage.getItem('bio', (error, text)=>{
+            if(text !== null) {
+                this.setState({bio: text});
+            }
+        });
+        AsyncStorage.getItem('picture', (error, text)=>{
+            if(text !== null) {
+                this.setState({picture: text});
+            }
+        });
     };
 
     _onPressButton() {
         if(this.state.isLoggedIn) {
             AsyncStorage.removeItem('username');
-            AsyncStorage.removeItem('jwt');
+            //AsyncStorage.removeItem('jwt');
             AsyncStorage.removeItem('firstName');
             AsyncStorage.removeItem('lastName');
             AsyncStorage.removeItem('email');
             AsyncStorage.removeItem('bio');
             AsyncStorage.removeItem('user_id');
+            AsyncStorage.removeItem('picture');
             alert('You have been logged out.');
             this.setState({isLoggedIn: false});
             this.props.navigation.dispatch(NavigationActions.reset({

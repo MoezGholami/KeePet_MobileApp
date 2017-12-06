@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import Expo from 'expo';
 import Constant from './Constant';
+import Icon from '@expo/vector-icons/FontAwesome';
 import { NavigationActions } from 'react-navigation';
 import {
     AsyncStorage,
@@ -48,11 +49,79 @@ class Login extends Component<{}> {
                                 </Text>
                             </TouchableOpacity>
                         </View>
+                        <View style={styles.googleButton}>
+                            <Icon.Button
+                                name='google'
+                                backgroundColor='#DD4B39'
+                                onPress={ this.signInWithGoogleAsync.bind(this) }
+                                {...iconStyles}
+                            >
+                                <Text style={styles.buttonText}>
+                                    Google sign in
+                                </Text>
+                            </Icon.Button>
+                        </View>
                     </View>
                 </View>
             </View>
         );
     }
+
+    async signInWithGoogleAsync() {
+        try {
+            const result = await Expo.Google.logInAsync({
+                //androidClientId: YOUR_CLIENT_ID_HERE,
+                iosClientId: '363576231093-fbl4r3laghhu4de8hnvg3kk621en5e27.apps.googleusercontent.com' ,
+                scopes: ['profile', 'email'],
+            });
+
+            if (result.type === 'success') {
+                tokeninfoUrl = 'https://www.googleapis.com/oauth2/v3/tokeninfo?id_token='
+                    +result.idToken;
+                console.log(tokeninfoUrl)
+                fetch(tokeninfoUrl, {method: 'GET'})
+                    .then((response) => response.json())
+                    .then((res) => {
+                    console.log(res)
+                        AsyncStorage.setItem('user_id', res.sub);
+                        AsyncStorage.setItem('email', res.email);
+                        AsyncStorage.setItem('firstName', res.given_name);
+                        AsyncStorage.setItem('lastName', res.family_name);
+                        AsyncStorage.setItem('picture', res.picture);
+                        AsyncStorage.setItem('username', '');
+                        AsyncStorage.setItem('bio', '');
+                    })
+                    .done()
+                this.props.navigation.dispatch(NavigationActions.reset({
+                        index: 0,
+                        actions: [NavigationActions.navigate({routeName: 'Profile'})]
+                    })
+                )
+            } else {
+                return {cancelled: true};
+            }
+        } catch(e) {
+            return {error: true};
+        }
+    }
+
+    // googleVerify = (accessToken) => {
+    //     fetch(Constant.urlBase + 'api/owner/googleVerify', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Accept': 'application/json',
+    //             'Content-Type': 'application/json',
+    //         },
+    //         body: JSON.stringify({
+    //             token: accessToken,
+    //         })
+    //     })
+    //         .then((response) => response.json())
+    //         .then((res) => {
+    //             console.log(res)
+    //         })
+    //         .done();
+    // };
 
     login = () => {
         const { navigate } = this.props.navigation;
@@ -70,19 +139,19 @@ class Login extends Component<{}> {
         })
             .then((response) => response.json())
             .then((res) => {
-                console.log(res)
                 if(res.error) {
                     alert("Please log in again.");
                 }
                 else
                 {
                     AsyncStorage.setItem('username', res.username);
-                    AsyncStorage.setItem('jwt', res.jwt);
+                    //AsyncStorage.setItem('jwt', res.jwt);
                     AsyncStorage.setItem('firstName', res.firstName);
                     AsyncStorage.setItem('lastName', res.lastName);
                     AsyncStorage.setItem('email', res.email);
                     AsyncStorage.setItem('bio', res.bio);
                     AsyncStorage.setItem('user_id', res.user_id);
+                    AsyncStorage.setItem('picture', '');
                     this.props.navigation.dispatch(NavigationActions.reset({
                             index: 0,
                             actions: [NavigationActions.navigate({routeName: 'Profile'})]
@@ -93,6 +162,12 @@ class Login extends Component<{}> {
             .done();
     };
 }
+
+const iconStyles = {
+    borderRadius: 10,
+    textAlign: 'center',
+    //iconStyle: { paddingVertical: 2 },
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -119,6 +194,7 @@ const styles = StyleSheet.create({
     buttonText: {
         textAlign: 'center',
         color: '#FFFFFF',
+        justifyContent: 'center',
     },
     backgroundImage: {
         flex: 1,
@@ -141,7 +217,13 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         paddingHorizontal: 10,
         width: 250,
-    }
+    },
+    googleButton: {
+        flex:1,
+        justifyContent: 'center',
+        alignSelf: 'center',
+        paddingTop: 15,
+    },
 });
 
 export default Login;
