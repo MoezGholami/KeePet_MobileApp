@@ -78,11 +78,11 @@ class Login extends Component<{}> {
             if (result.type === 'success') {
                 tokeninfoUrl = 'https://www.googleapis.com/oauth2/v3/tokeninfo?id_token='
                     +result.idToken;
-                console.log(tokeninfoUrl)
+                //console.log(tokeninfoUrl)
                 fetch(tokeninfoUrl, {method: 'GET'})
                     .then((response) => response.json())
                     .then((res) => {
-                    console.log(res)
+                    //console.log(res)
                         AsyncStorage.setItem('user_id', res.sub);
                         AsyncStorage.setItem('email', res.email);
                         AsyncStorage.setItem('firstName', res.given_name);

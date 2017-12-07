@@ -1,38 +1,94 @@
 import React, { Component } from 'react';
 import Moment from 'moment';
+import Constant from './Constant';
 import { CheckBox } from 'react-native-elements'
-import Constant from './Constant'
+import CalendarPicker from 'react-native-calendar-picker';
+import { Button, List, ListItem, Thumbnail, Body, SwipeRow, Icon } from 'native-base';
+import IconEntypo from '@expo/vector-icons/Entypo';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {
+    TextInput,
     StyleSheet,
     Text,
     View,
     Image,
     ScrollView,
-    TextInput,
     TouchableOpacity,
+    AsyncStorage,
 } from 'react-native';
-import CalendarPicker from 'react-native-calendar-picker';
 
-class Post extends Component {
+class Post extends Component<{}> {
     constructor(props){
         super(props);
         this.state = {
-            isChecked: {},
-            optionsNum: 3,
-            optionNames: [],
-            pets: [],
-            selectedPet: 'Dog',
-            petNum: 5,
-            isPetChecked: {},
+            title: '',
+            imageUrls: [],
+            types: [],
+            names: [],
+            breeds: [],
+            sex: [],
+            ageMonths: [],
             selectedStartDate: null,
             selectedEndDate: null,
             description: '',
+            isChecked: {},
+            optionsNum: 3,
+            optionNames: [],
         };
         this.onDateChange = this.onDateChange.bind(this);
     }
 
-    //static navigationOptions = {header: { style:{ position: 'absolute', backgroundColor: 'transparent', zIndex: 100, top: 0, left: 0, right: 0 } } };
+    componentWillMount() {
+        var isChecked = {'option1': true, 'option2': false, 'option3': false };
+        var optionNames = ['option1', 'option2', 'option3'];
+        this.setState({
+            isChecked: isChecked,
+            optionNames: optionNames,
+        });
+    }
+
+    componentDidMount() {
+        this._loadInitialState().done;
+    }
+
+    _loadInitialState = async() => {
+        let types = JSON.parse(await AsyncStorage.getItem('postPetType'));
+        let names = JSON.parse(await AsyncStorage.getItem('postPetName'));
+        let breeds = JSON.parse(await AsyncStorage.getItem('postPetBreed'));
+        let sex = JSON.parse(await AsyncStorage.getItem('postPetSex'));
+        let ageMonths = JSON.parse(await AsyncStorage.getItem('postPetAgeMonth'));
+        let imageUrls = JSON.parse(await AsyncStorage.getItem('postPetUri'));
+        if(types !== null) {
+            this.setState({
+                types: types,
+            })
+        }
+        if(names !== null) {
+            this.setState({
+                names: names,
+            })
+        }
+        if(breeds !== null) {
+            this.setState({
+                breeds: breeds,
+            })
+        }
+        if(sex !== null) {
+            this.setState({
+                sex: sex,
+            })
+        }
+        if(ageMonths !== null) {
+            this.setState({
+                ageMonths: ageMonths,
+            })
+        }
+        if(imageUrls !== null) {
+            this.setState({
+                imageUrls: imageUrls,
+            })
+        }
+    }
 
     onDateChange(date, type) {
         if (type === 'END_DATE') {
@@ -47,32 +103,46 @@ class Post extends Component {
         }
     }
 
-    componentWillMount() {
-        var isChecked = {'option1': true, 'option2': false, 'option3': false };
-        var optionNames = ['option1', 'option2', 'option3'];
-        var pets = ['Dog', 'Cat', 'Fish', 'Bird', 'Reptile'];
-        var isPetChecked = {'Dog': true, 'Cat': false, 'Fish': false, 'Bird':false, 'Reptile': false};
-        this.setState({
-            isChecked: isChecked,
-            optionNames: optionNames,
-            pets: pets,
-            isPetChecked: isPetChecked,
-        });
-    }
-
-    _onPressPets(key) {
-        var isPetChecked = this.state.isPetChecked;
-        for(let i = 0; i < this.state.petNum; i++) {
-            isPetChecked[this.state.pets[i]] = false;
-        }
-        isPetChecked[key] = true;
-        this.setState({isPetChecked: isPetChecked, selectedPet: key});
-    }
-
     _onPressCheckBox(key) {
         var isChecked = this.state.isChecked;
         isChecked[key] = !isChecked[key];
         this.setState({isChecked: isChecked});
+    }
+
+    _onPressDelete(key) {
+        let types = this.state.types;
+        let names = this.state.names;
+        let breeds = this.state.breeds;
+        let sex = this.state.sex;
+        let ageMonths = this.state.ageMonths;
+        let imageUrls = this.state.imageUrls;
+        types.splice(key, 1);
+        names.splice(key, 1);
+        breeds.splice(key, 1);
+        sex.splice(key, 1);
+        ageMonths.splice(key, 1);
+        imageUrls.splice(key, 1);
+        this.setState({
+            types: types,
+            names: names,
+            breeds: breeds,
+            sex: sex,
+            ageMonth: ageMonths,
+            imageUrls: imageUrls,
+        });
+        AsyncStorage.setItem('postPetType', JSON.stringify(types));
+        AsyncStorage.setItem('postPetName', JSON.stringify(names));
+        AsyncStorage.setItem('postPetBreed', JSON.stringify(breeds));
+        AsyncStorage.setItem('postPetSex', JSON.stringify(sex));
+        AsyncStorage.setItem('postPetAgeMonth', JSON.stringify(ageMonths));
+        AsyncStorage.setItem('postPetUri', JSON.stringify(imageUrls));
+    }
+
+    _onPressEdit(key) {
+        console.log(key)
+
+        AsyncStorage.setItem('isToEdit', JSON.stringify(key));
+        this.props.navigation.navigate('PostDetail');
     }
 
     send = () => {
@@ -104,27 +174,13 @@ class Post extends Component {
     };
 
     render() {
+
         const { selectedStartDate, selectedEndDate } = this.state;
         const minDate = new Date(); // Today
         const maxDate = new Date(2019, 1, 1);
         const startDate  =  selectedStartDate ? Moment(selectedStartDate).format('YYYY-MM-DD').toString() : '';
         const endDate = selectedEndDate ? Moment(selectedEndDate).format('YYYY-MM-DD').toString() : '';
 
-        var pets = [];
-        for(let i = 0; i < this.state.petNum; i++){
-            pets.push(
-                <CheckBox
-                    left
-                    style={{backgroundColor: 'transparent'}}
-                    key={this.state.pets[i]}
-                    title={this.state.pets[i]}
-                    checkedIcon='dot-circle-o'
-                    uncheckedIcon='circle-o'
-                    checked={this.state.isPetChecked[this.state.pets[i]]}
-                    onPress={() => this._onPressPets(this.state.pets[i])}
-                />
-            )
-        }
         var checkBox = [];
         for(let i = 0; i < this.state.optionsNum; i++){
             checkBox.push(
@@ -139,25 +195,84 @@ class Post extends Component {
                 />
             )
         }
+
+        let listItem = [];
+        for(let i = 0; i < this.state.types.length;i++) {
+            listItem.push(
+                <SwipeRow
+                    key={i}
+                    leftOpenValue={75}
+                    rightOpenValue={-75}
+                    left={
+                        <Button success onPress={() => this._onPressEdit(i)}>
+                            <IconEntypo active name="edit" />
+                        </Button>
+                    }
+                    body={
+                        <View style={styles.listItem}>
+                            <View>
+                                <Thumbnail style={styles.thumbnail} square size={80} source={{uri: this.state.imageUrls[i]}}/>
+                            </View>
+                            <View>
+                                <Text style={styles.listType}>{this.state.types[i]}</Text>
+                                <Text note style={styles.listNote}>{this.state.names[i]}</Text>
+                            </View>
+                        </View>
+                    }
+                    right={
+                        <Button danger onPress={() => this._onPressDelete(i)}>
+                            <Icon active name="trash" />
+                        </Button>
+                    }
+                />
+            )
+        }
+
         return (
             <View style={styles.container}>
                 <Image style={styles.backgroundImage} source={require('../../image/main.jpg')}>
                     <KeyboardAwareScrollView>
                         <ScrollView contentContainerStyle={styles.contentContainer}>
-                            <Text style={styles.textHeader}>
-                                Please list the categories of pets you have
+
+                            <Text style={styles.text}>
+                                Please add a title
                             </Text>
-                            <View style={styles.checkBoxContainer}>
-                                <View style={styles.checkBox}>
-                                    { pets }
-                                </View>
-                            </View>
+                            <TextInput style={styles.input}
+                                       onChangeText={(title) => this.setState({title})}
+                                       value = {this.state.title}
+                                       placeholder='title'>
+                            </TextInput>
+
                             <Text style={styles.break}>
                                 {"\n"}
                             </Text>
                             <View style={styles.border} />
 
-                            <Text style={styles.text}>
+                            <Text style={styles.textSecond}>
+                                Please add your pet information
+                            </Text>
+                            <View style={styles.manageList}>
+                                <IconEntypo
+                                    name='plus'
+                                    color='#00FF00'
+                                    size={32}
+                                    style={styles.listIcon}
+                                    onPress={ this._onPressAdd }
+                                >
+                                </IconEntypo>
+                                <View style={styles.border} />
+                                <List>
+                                    { listItem }
+                                </List>
+
+                            </View>
+
+                            <Text style={styles.break}>
+                                {"\n"}
+                            </Text>
+                            <View style={styles.border} />
+
+                            <Text style={styles.textSecond}>
                                 Please select your preferred start and end date
                             </Text>
                             <CalendarPicker
@@ -179,10 +294,10 @@ class Post extends Component {
                             </Text>
                             <View style={styles.border} />
 
-                            <Text style={styles.text}>
+                            <Text style={styles.textSecond}>
                                 Please add a description of your post
                             </Text>
-                            <TextInput style={styles.input}
+                            <TextInput style={styles.inputDes}
                                        multiline={true}
                                        blurOnSubmit={false}
                                        onChangeText={(description) => this.setState({description})}
@@ -194,7 +309,7 @@ class Post extends Component {
                             </Text>
                             <View style={styles.border} />
 
-                            <Text style={styles.text}>
+                            <Text style={styles.textSecond}>
                                 Select the add on selections
                             </Text>
                             <View style={styles.checkBoxContainer}>
@@ -215,45 +330,55 @@ class Post extends Component {
                                     post
                                 </Text>
                             </TouchableOpacity>
+
                         </ScrollView>
                     </KeyboardAwareScrollView>
                 </Image>
             </View>
-        );
+        )
+    }
+
+    _onPressAdd = () => {
+        this.props.navigation.navigate('PostDetail')
     }
 }
 
 const styles = StyleSheet.create({
-    contentContainer: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'transparent'
-    },
-    checkBoxContainer: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'center',
-    },
-    checkBox: {
-        width: '100%',
-        backgroundColor: 'transparent',
-    },
     container: {
-        flex: 1,
-        // position: 'absolute',
-        // justifyContent: 'center',
-        // alignItems: 'stretch',
+        flex: 1
     },
     backgroundImage: {
-        // flex: 1,
-        // width: null,
-        // height: 250,
-        // alignSelf: 'stretch',
         width: null,
         height: null,
         flex: 1,
     },
+    contentContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'transparent',
+    },
     text: {
+        fontSize: 20,
+        backgroundColor: 'rgba(0,0,0,0)',
+        margin: 10,
+        paddingTop: 80,
+        //alignSelf: 'flex-start',
+        //paddingLeft: '10%',
+    },
+    input: {
+        height: 40,
+        backgroundColor: 'rgba(255,255,255,1)',
+        marginBottom: 10,
+        width: '80%',
+        borderWidth: 1,
+        paddingLeft: 10,
+    },
+    manageList: {
+        alignSelf: 'stretch',
+        flex: 1,
+        borderWidth: 1,
+    },
+    textSecond: {
         fontSize: 20,
         backgroundColor: 'rgba(0,0,0,0)',
         margin: 10,
@@ -273,7 +398,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 2,
         alignSelf: 'stretch',
     },
-    input: {
+    inputDes: {
         height: 200,
         padding: 10,
         fontSize: 16,
@@ -295,6 +420,33 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         fontSize: 20,
     },
+    checkBoxContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+    },
+    checkBox: {
+        width: '80%',
+        backgroundColor: 'transparent',
+    },
+    listType: {
+        paddingLeft: 10,
+        paddingBottom: 5,
+        fontSize: 20,
+    },
+    listNote: {
+        paddingLeft: 10,
+        fontSize: 16
+    },
+    listIcon: {
+        paddingLeft: 20,
+    },
+    listItem: {
+        flexDirection: 'row',
+    },
+    thumbnail: {
+        paddingHorizontal: 20,
+    }
 });
 
 export default Post;

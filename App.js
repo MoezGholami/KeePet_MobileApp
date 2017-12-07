@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Splash from './src/javascript/src/Splash';
+import PostDetail from './src/javascript/src/PostDetail';
 import Post from './src/javascript/src/Post';
 
 
