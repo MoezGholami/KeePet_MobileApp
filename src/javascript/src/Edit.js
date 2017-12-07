@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Constant from './Constant';
+import { Button } from 'native-base';
 import { NavigationActions } from 'react-navigation';
 import {
     AsyncStorage,
@@ -114,11 +115,11 @@ class Edit extends Component {
                                        multiline = {true}
                                        placeholder='bio'>
                             </TextInput>
-                            <TouchableOpacity style={styles.button} onPress={ this.save }>
+                            <Button style={styles.button} primary onPress={ this.save }>
                                 <Text style={styles.buttonText}>
                                     save
                                 </Text>
-                            </TouchableOpacity>
+                            </Button>
 
                         </ScrollView>
                     </KeyboardAwareScrollView>
@@ -150,8 +151,8 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 20,
         backgroundColor: 'rgba(0,0,0,0)',
-        margin: 10,
-        paddingTop: 80,
+        marginBottom: 10,
+        marginTop: 80,
     },
     secondText: {
         paddingLeft: '10%',
@@ -162,6 +163,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#2980b9',
         paddingVertical: 5,
         justifyContent: 'center',
+        alignSelf: 'center',
         marginTop: 5,
         width: '60%',
         height: 40,

@@ -254,7 +254,7 @@ class Post extends Component<{}> {
                             <View style={styles.manageList}>
                                 <IconEntypo
                                     name='plus'
-                                    color='#00FF00'
+                                    color='#4169E1'
                                     size={32}
                                     style={styles.listIcon}
                                     onPress={ this._onPressAdd }
@@ -325,11 +325,11 @@ class Post extends Component<{}> {
                                 {"\n"}
                             </Text>
 
-                            <TouchableOpacity style={styles.button} onPress={ this.send }>
+                            <Button style={styles.button} primary onPress={ this.send }>
                                 <Text style={styles.buttonText}>
                                     post
                                 </Text>
-                            </TouchableOpacity>
+                            </Button>
 
                         </ScrollView>
                     </KeyboardAwareScrollView>
@@ -360,10 +360,8 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 20,
         backgroundColor: 'rgba(0,0,0,0)',
-        margin: 10,
-        paddingTop: 80,
-        //alignSelf: 'flex-start',
-        //paddingLeft: '10%',
+        marginBottom: 10,
+        marginTop: 80,
     },
     input: {
         height: 40,
@@ -383,12 +381,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0,0,0,0)',
         margin: 10,
         paddingTop: 15,
-    },
-    textHeader: {
-        fontSize: 20,
-        backgroundColor: 'rgba(0,0,0,0)',
-        margin: 10,
-        paddingTop: 80,
     },
     break: {
         backgroundColor: 'rgba(0,0,0,0)',
@@ -411,6 +403,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#2980b9',
         paddingVertical: 5,
         justifyContent: 'center',
+        alignSelf: 'center',
         width: '60%',
         height: 40,
         marginBottom: 30,

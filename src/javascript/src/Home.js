@@ -7,72 +7,153 @@ import {
     StyleSheet,
     TouchableOpacity,
     AsyncStorage,
-    AppRegistry,
     Image,
+    FlatList, ActivityIndicator
 } from 'react-native';
-import Splash from "./Splash";
+import { List, ListItem, SearchBar } from "react-native-elements";
 
 class Home extends Component<{}> {
 
-    state = {
-        firstName: '',
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            loading: false,
+            data: [],
+            error: null,
+            refreshing: false
+        };
+    }
 
-    componentWillMount() {
-        this._loadInitialState().done;
-    };
+    componentDidMount() {
+        this.makeRemoteRequest();
+    }
 
-    _loadInitialState = async() => {
-        var user = await AsyncStorage.getItem('firstName');
-        if(user !== null) {
-            this.setState({firstName: user});
-        }
-        /*AsyncStorage.getItem('jwt', (err, token) => {
-            fetch(Constant.urlBase + 'api/owner/verify', {
-                headers: {
-                    Accept: 'application/json',
-                    Authorization: `JWT ${token}`
+    makeRemoteRequest = () => {
+        const { page, seed } = this.state;
+        const url = Constant.urlBase+'owner/all_job_posts';
+        //const url = `https://randomuser.me/api/?seed=${seed}&page=${page}&results=20`;
+        this.setState({ loading: true });
+
+        fetch(url)
+            .then(res => res.json())
+            .then(res => {
+                // this.setState({
+                //     data: page === 1 ? res.results : [...this.state.data, ...res.results],
+                //     error: res.error || null,
+                //     loading: false,
+                //     refreshing: false
+                // });
+                for(var i = 0;i < res.length;i++) {
+                    res[i]['key'] = i;
                 }
+                this.setState({
+                    data: res,
+                    loading: false,
+                    refreshing: false,
+                })
+                //console.log(res);
             })
-                .then((response) => response.json())
-                .then((json) => {
-                    this.setState({
-                        secret: json.secret,
-                        //showIndicator: false
-                    })
-                })
-                .catch(() => {
-                    alert('There was an error fetching the secret info.')
-                })
-                .done()
-        })
-        */
+            .catch(error => {
+                this.setState({ error, loading: false });
+            });
+    };
+
+
+    handleRefresh = () => {
+        this.setState(
+            {
+                refreshing: true
+            },
+            () => {
+                this.makeRemoteRequest();
+            }
+        );
+    };
+
+    renderSeparator = () => {
+        return (
+            <View
+                style={{
+                    height: 1,
+                    width: "86%",
+                    backgroundColor: "#CED0CE",
+                    marginLeft: "14%"
+                }}
+            />
+        );
+    };
+
+    renderHeader = () => {
+        return <SearchBar placeholder="Type Here..." lightTheme round />;
+    };
+
+    renderFooter = () => {
+        if (!this.state.loading) return null;
+
+        return (
+            <View
+                style={{
+                    paddingVertical: 20,
+                    borderTopWidth: 1,
+                    borderColor: "#CED0CE"
+                }}
+            >
+                <ActivityIndicator animating size="large" />
+            </View>
+        );
+    };
+
+    _onPressItem(key) {
+        AsyncStorage.setItem('userNameView', this.state.data[key].username);
+        AsyncStorage.setItem('emailView', this.state.data[key].email);
+        AsyncStorage.setItem('descriptionView', this.state.data[key].description);
+        AsyncStorage.setItem('startDateView', this.state.data[key].from);
+        AsyncStorage.setItem('endDateView', this.state.data[key].to);
+        AsyncStorage.setItem('petsInfoView', JSON.stringify(this.state.data[key].animals));
+        this.props.navigation.navigate('ViewItem');
     };
 
     render() {
         return (
-            <View style={styles.container}>
-                <Image style={styles.backgroundImage} source={require('../../image/main.jpg')}>
-                    <View style={styles.content}>
-                        <Text>
-                            {'Hello '+ this.state.firstName}
-                        </Text>
-                        <Text>
-                            This is home
-                        </Text>
-                    </View>
-                </Image>
-            </View>
+            <Image style={styles.backgroundImage} source={require('../../image/main.jpg')}>
+            <List containerStyle={styles.container}>
+                <FlatList
+                    data={this.state.data}
+                    renderItem={({ item }) => (
+                        <ListItem
+                            roundAvatar
+                            title={`${item.title}`}
+                            subtitle={item.username}
+                            avatar={{ uri: item.animals[0].image }}
+                            containerStyle={{ borderBottomWidth: 0 }}
+                            onPress={() => this._onPressItem(item.key)}
+                        />
+                    )}
+                    keyExtractor={item => item.key}
+                    ItemSeparatorComponent={this.renderSeparator}
+                    ListHeaderComponent={this.renderHeader}
+                    ListFooterComponent={this.renderFooter}
+                    onRefresh={this.handleRefresh}
+                    refreshing={this.state.refreshing}
+                    //onEndReached={this.handleLoadMore}
+                    onEndReachedThreshold={50}
+                />
+            </List>
+            </Image>
         );
     }
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        borderTopWidth: 0,
+        borderBottomWidth: 0,
+        marginTop: 64,
+        //backgroundColor: 'transparent',
+        alignSelf: 'stretch',
     },
     backgroundImage: {
-        justifyContent: 'center',
+        //justifyContent: 'center',
         alignItems: 'center',
         width: null,
         height: null,

@@ -1,3 +1,3 @@
 module.exports = {
-    urlBase: 'http://192.168.0.106:3000/'
+    urlBase: 'http://10.147.80.45:3000/'
 };

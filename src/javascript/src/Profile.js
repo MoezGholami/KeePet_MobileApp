@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { NavigationActions } from 'react-navigation';
+import { Button } from 'native-base';
 import {
     Text,
     View,
     StyleSheet,
-    TouchableOpacity,
     AsyncStorage,
     Image,
 } from 'react-native';
@@ -100,16 +100,16 @@ class Profile extends Component<{}> {
             profile = <View style={styles.container}>
                 <Image style={styles.backgroundImage} source={require('../../image/main.jpg')}>
                     <View style={styles.buttonContainer}>
-                        <TouchableOpacity style={styles.button} onPress={() => this._onPressRegister()}>
+                        <Button style={styles.button} primary onPress={() => this._onPressRegister()}>
                             <Text style={styles.buttonText}>
                                 Sign up
                             </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.button} onPress={() => this._onPressButton()}>
+                        </Button>
+                        <Button style={styles.button} primary onPress={() => this._onPressButton()}>
                             <Text style={styles.buttonText}>
                                 Sign out
                             </Text>
-                        </TouchableOpacity>
+                        </Button>
                     </View>
                     <Text style={styles.break}>
                         {"\n"}
@@ -141,16 +141,16 @@ class Profile extends Component<{}> {
                         {"\n"}
                     </Text>
                     <View style={styles.buttonContainerBottom}>
-                        <TouchableOpacity style={styles.button2} onPress={() => this._onPressPost()}>
+                        <Button style={styles.button2} primary onPress={() => this._onPressPost()}>
                             <Text style={styles.buttonText}>
                                 Post a Request
                             </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.button2} onPress={() => this._onPressEdit()}>
+                        </Button>
+                        <Button style={styles.button2} primary onPress={() => this._onPressEdit()}>
                             <Text style={styles.buttonText}>
                                 Edit Profile
                             </Text>
-                        </TouchableOpacity>
+                        </Button>
                     </View>
                 </Image>
             </View>
@@ -158,16 +158,16 @@ class Profile extends Component<{}> {
             profile = <View style={styles.container}>
                 <Image style={styles.backgroundImage} source={require('../../image/main.jpg')}>
                     <View style={styles.buttonContainer}>
-                        <TouchableOpacity style={styles.button} onPress={() => this._onPressRegister()}>
+                        <Button style={styles.button} primary onPress={() => this._onPressRegister()}>
                             <Text style={styles.buttonText}>
                                 Sign up
                             </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.button} onPress={() => this._onPressButton()}>
+                        </Button>
+                        <Button style={styles.button} primary onPress={() => this._onPressButton()}>
                             <Text style={styles.buttonText}>
                                 Sign in
                             </Text>
-                        </TouchableOpacity>
+                        </Button>
                     </View>
                     <Text style={styles.break}>
                         {"\n"}

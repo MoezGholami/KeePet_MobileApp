@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { CheckBox } from 'react-native-elements'
 import { ImagePicker } from 'expo';
+import { Button as ButtonBase} from 'native-base';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {
     StyleSheet,
@@ -252,11 +253,11 @@ class PostDetail extends Component {
                                 {"\n"}
                             </Text>
 
-                            <TouchableOpacity style={styles.button} onPress={ this.submit }>
+                            <ButtonBase style={styles.button} primary onPress={ this.submit }>
                                 <Text style={styles.buttonText}>
                                     Submit
                                 </Text>
-                            </TouchableOpacity>
+                            </ButtonBase>
 
                         </ScrollView>
                     </KeyboardAwareScrollView>
@@ -305,8 +306,8 @@ const styles = StyleSheet.create({
     textHeader: {
         fontSize: 20,
         backgroundColor: 'rgba(0,0,0,0)',
-        margin: 10,
-        paddingTop: 80,
+        marginBottom: 10,
+        marginTop: 80,
     },
     break: {
         backgroundColor: 'rgba(0,0,0,0)',
@@ -328,6 +329,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#2980b9',
         paddingVertical: 5,
         justifyContent: 'center',
+        alignSelf: 'center',
         width: '60%',
         height: 40,
         marginBottom: 30,

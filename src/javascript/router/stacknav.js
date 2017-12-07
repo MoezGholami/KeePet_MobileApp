@@ -5,6 +5,7 @@ import Post from '../src/Post';
 import Register from '../src/Register';
 import Edit from '../src/Edit';
 import PostDetail from '../src/PostDetail';
+import ViewItem from  '../src/ViewItem';
 import TabNav from './tabnav';
 import TabNavProfile from './tabnavProfile';
 
@@ -74,6 +75,17 @@ const StackNav = StackNavigator({
             },
         })
     },
+    ViewItem: {
+        screen: ViewItem,
+        navigationOptions: ({navigation}) => ({
+            title: '',
+            headerTitleStyle: {bottom: 0},
+            headerStyle: {
+                backgroundColor: 'transparent',
+                position: 'absolute',
+            },
+        })
+    }
 });
 
 export default StackNav;
