@@ -10,7 +10,7 @@ import {
     ScrollView,
 } from 'react-native';
 
-class ViewItem extends Component<{}> {
+class MyPost extends Component<{}> {
     constructor(props) {
         super(props);
         this.state = {
@@ -20,7 +20,6 @@ class ViewItem extends Component<{}> {
             startDate: '',
             endDate: '',
             petsInfo: [],
-            location: {},
         }
     }
 
@@ -29,13 +28,13 @@ class ViewItem extends Component<{}> {
     }
 
     _loadInitialState = async() => {
-        let username = await AsyncStorage.getItem('userNameView');
-        let email = await AsyncStorage.getItem('emailView');
-        let description = await AsyncStorage.getItem('descriptionView');
-        let startDate = await AsyncStorage.getItem('startDateView');
-        let endDate = await AsyncStorage.getItem('endDateView');
-        let petsInfo = JSON.parse(await AsyncStorage.getItem('petsInfoView'));
-        let location = JSON.parse(await AsyncStorage.getItem('locationView'));
+        let username = await AsyncStorage.getItem('userNameProfile');
+        let email = await AsyncStorage.getItem('emailProfile');
+        let description = await AsyncStorage.getItem('descriptionProfile');
+        let startDate = await AsyncStorage.getItem('startDateProfile');
+        let endDate = await AsyncStorage.getItem('endDateProfile');
+        let petsInfo = JSON.parse(await AsyncStorage.getItem('petsInfoProfile'));
+        console.log(petsInfo);
         if(username !== null) {
             this.setState({username: username});
         }
@@ -54,19 +53,12 @@ class ViewItem extends Component<{}> {
         if(petsInfo !== null) {
             this.setState({petsInfo: petsInfo});
         }
-        if(location !== null) {
-            this.setState({location: location});
-        }
-        AsyncStorage.removeItem('userNameView');
-        AsyncStorage.removeItem('emailView');
-        AsyncStorage.removeItem('descriptionView');
-        AsyncStorage.removeItem('startDateView');
-        AsyncStorage.removeItem('endDateView');
-        AsyncStorage.removeItem('petsInfoView');
-    }
-
-    _onPressLocation = () => {
-        this.props.navigation.navigate('MapViewItem')
+        AsyncStorage.removeItem('userNameProfile');
+        AsyncStorage.removeItem('emailProfile');
+        AsyncStorage.removeItem('descriptionProfile');
+        AsyncStorage.removeItem('startDateProfile');
+        AsyncStorage.removeItem('endDateProfile');
+        AsyncStorage.removeItem('petsInfoProfile');
     }
 
     render() {
@@ -120,13 +112,9 @@ class ViewItem extends Component<{}> {
                             </Text>
                         </View>
                         {petsInfo}
-                        <ButtonBase
-                            info
-                            style={{alignSelf: 'stretch', justifyContent: 'center', marginTop: 20}}
-                            onPress={this._onPressLocation}
-                        >
+                        <ButtonBase danger style={{alignSelf: 'stretch', justifyContent: 'center', marginTop: 20}}>
                             <Text>
-                                View location
+                                Delete
                             </Text>
                         </ButtonBase>
                     </ScrollView>
@@ -181,4 +169,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default ViewItem
+export default MyPost

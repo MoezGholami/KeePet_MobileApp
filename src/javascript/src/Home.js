@@ -110,6 +110,7 @@ class Home extends Component<{}> {
         AsyncStorage.setItem('startDateView', this.state.data[key].from);
         AsyncStorage.setItem('endDateView', this.state.data[key].to);
         AsyncStorage.setItem('petsInfoView', JSON.stringify(this.state.data[key].animals));
+        AsyncStorage.setItem('locationView', JSON.stringify(this.state.data[key].location));
         this.props.navigation.navigate('ViewItem');
     };
 

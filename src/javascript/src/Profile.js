@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { NavigationActions } from 'react-navigation';
+import { List, ListItem } from "react-native-elements";
+import Constant from './Constant';
 import { Button } from 'native-base';
 import {
     Text,
@@ -7,6 +9,9 @@ import {
     StyleSheet,
     AsyncStorage,
     Image,
+    ScrollView,
+    FlatList,
+    ActivityIndicator,
 } from 'react-native';
 
 class Profile extends Component<{}> {
@@ -18,10 +23,86 @@ class Profile extends Component<{}> {
         email: '',
         bio: '',
         picture: '',
+        loading: false,
+        data: [],
+        refreshing: false
     };
 
     componentDidMount() {
         this._loadInitialState().done;
+        this.makeRemoteRequest();
+    };
+
+    makeRemoteRequest = () => {
+        const { page, seed } = this.state;
+        const url = Constant.urlBase+'owner/all_job_posts';
+        this.setState({ loading: true });
+
+        fetch(url)
+            .then(res => res.json())
+            .then(res => {
+                for(var i = 0;i < res.length;i++) {
+                    res[i]['key'] = i;
+                }
+                this.setState({
+                    data: res,
+                    loading: false,
+                    refreshing: false,
+                })
+            })
+            .catch(error => {
+                this.setState({ error, loading: false });
+            });
+    };
+
+    handleRefresh = () => {
+        this.setState(
+            {
+                refreshing: true
+            },
+            () => {
+                this.makeRemoteRequest();
+            }
+        );
+    };
+
+    renderSeparator = () => {
+        return (
+            <View
+                style={{
+                    height: 1,
+                    width: "86%",
+                    backgroundColor: "#CED0CE",
+                    marginLeft: "14%"
+                }}
+            />
+        );
+    };
+
+    renderFooter = () => {
+        if (!this.state.loading) return null;
+
+        return (
+            <View
+                style={{
+                    paddingVertical: 20,
+                    borderTopWidth: 1,
+                    borderColor: "#CED0CE"
+                }}
+            >
+                <ActivityIndicator animating size="large" />
+            </View>
+        );
+    };
+
+    _onPressItem(key) {
+        AsyncStorage.setItem('userNameProfile', this.state.data[key].username);
+        AsyncStorage.setItem('emailProfile', this.state.data[key].email);
+        AsyncStorage.setItem('descriptionProfile', this.state.data[key].description);
+        AsyncStorage.setItem('startDateProfile', this.state.data[key].from);
+        AsyncStorage.setItem('endDateProfile', this.state.data[key].to);
+        AsyncStorage.setItem('petsInfoProfile', JSON.stringify(this.state.data[key].animals));
+        this.props.navigation.navigate('MyPost');
     };
 
     _loadInitialState = async() => {
@@ -99,83 +180,117 @@ class Profile extends Component<{}> {
         if(this.state.isLoggedIn) {
             profile = <View style={styles.container}>
                 <Image style={styles.backgroundImage} source={require('../../image/main.jpg')}>
-                    <View style={styles.buttonContainer}>
-                        <Button style={styles.button} primary onPress={() => this._onPressRegister()}>
-                            <Text style={styles.buttonText}>
-                                Sign up
-                            </Text>
-                        </Button>
-                        <Button style={styles.button} primary onPress={() => this._onPressButton()}>
-                            <Text style={styles.buttonText}>
-                                Sign out
-                            </Text>
-                        </Button>
-                    </View>
-                    <Text style={styles.break}>
-                        {"\n"}
-                    </Text>
-                    <View style={styles.border} />
-                    <Text style={styles.break}>
-                        {"\n"}
-                    </Text>
-                    <View style={styles.textContainer}>
-
-                        <Text style={styles.text}>
-                            First Name: {this.state.firstName}
+                    <ScrollView>
+                        <View style={styles.buttonContainer}>
+                            <Button style={styles.button} primary onPress={() => this._onPressRegister()}>
+                                <Text style={styles.buttonText}>
+                                    Sign up
+                                </Text>
+                            </Button>
+                            <Button style={styles.button} primary onPress={() => this._onPressButton()}>
+                                <Text style={styles.buttonText}>
+                                    Sign out
+                                </Text>
+                            </Button>
+                        </View>
+                        <Text style={styles.break}>
+                            {"\n"}
                         </Text>
-                        <Text style={styles.text}>
-                            Last Name: {this.state.lastName}
+                        <View style={styles.border} />
+                        <Text style={styles.break}>
+                            {"\n"}
                         </Text>
+                        <View style={styles.textContainer}>
 
-                        <View>
                             <Text style={styles.text}>
-                                Email: {this.state.email}
+                                First Name: {this.state.firstName}
+                            </Text>
+                            <Text style={styles.text}>
+                                Last Name: {this.state.lastName}
+                            </Text>
+
+                            <View>
+                                <Text style={styles.text}>
+                                    Email: {this.state.email}
+                                </Text>
+                            </View>
+                            <Text style={styles.text}>
+                                Bio: {this.state.bio}
                             </Text>
                         </View>
-                        <Text style={styles.text}>
-                            Bio: {this.state.bio}
+                        <View style={styles.border} />
+                        <Text style={styles.break}>
+                            {"\n"}
                         </Text>
-                    </View>
-                    <View style={styles.border} />
-                    <Text style={styles.break}>
-                        {"\n"}
-                    </Text>
-                    <View style={styles.buttonContainerBottom}>
-                        <Button style={styles.button2} primary onPress={() => this._onPressPost()}>
-                            <Text style={styles.buttonText}>
-                                Post a Request
-                            </Text>
-                        </Button>
-                        <Button style={styles.button2} primary onPress={() => this._onPressEdit()}>
-                            <Text style={styles.buttonText}>
-                                Edit Profile
-                            </Text>
-                        </Button>
-                    </View>
+                        <View style={styles.buttonContainerBottom}>
+                            <Button style={styles.button2} primary onPress={() => this._onPressPost()}>
+                                <Text style={styles.buttonText}>
+                                    Post a Request
+                                </Text>
+                            </Button>
+                            <Button style={styles.button2} primary onPress={() => this._onPressEdit()}>
+                                <Text style={styles.buttonText}>
+                                    Edit Profile
+                                </Text>
+                            </Button>
+                        </View>
+                        <Text style={styles.break}>
+                            {"\n"}
+                        </Text>
+                        <View style={styles.border} />
+                        <Text style={styles.textList}>
+                            All my posts
+                        </Text>
+                        <List containerStyle={styles.container}>
+                            <FlatList
+                                data={this.state.data}
+                                renderItem={({ item }) => (
+                                    <ListItem
+                                        roundAvatar
+                                        title={`${item.title}`}
+                                        subtitle={item.username}
+                                        avatar={{ uri: item.animals[0].image }}
+                                        containerStyle={{ borderBottomWidth: 0 }}
+                                        onPress={() => this._onPressItem(item.key)}
+                                    />
+                                )}
+                                keyExtractor={item => item.key}
+                                ItemSeparatorComponent={this.renderSeparator}
+                                // ListHeaderComponent={this.renderHeader}
+                                ListFooterComponent={this.renderFooter}
+                                onRefresh={this.handleRefresh}
+                                refreshing={this.state.refreshing}
+                                //onEndReached={this.handleLoadMore}
+                                onEndReachedThreshold={50}
+                            />
+                        </List>
+                    </ScrollView>
                 </Image>
             </View>
         } else {
             profile = <View style={styles.container}>
                 <Image style={styles.backgroundImage} source={require('../../image/main.jpg')}>
-                    <View style={styles.buttonContainer}>
-                        <Button style={styles.button} primary onPress={() => this._onPressRegister()}>
-                            <Text style={styles.buttonText}>
-                                Sign up
-                            </Text>
-                        </Button>
-                        <Button style={styles.button} primary onPress={() => this._onPressButton()}>
-                            <Text style={styles.buttonText}>
-                                Sign in
-                            </Text>
-                        </Button>
-                    </View>
-                    <Text style={styles.break}>
-                        {"\n"}
-                    </Text>
-                    <View style={styles.border} />
-                    <Text style={styles.break}>
-                        {"\n"}
-                    </Text>
+                    <ScrollView>
+                        <View style={styles.buttonContainer}>
+                            <Button style={styles.button} primary onPress={() => this._onPressRegister()}>
+                                <Text style={styles.buttonText}>
+                                    Sign up
+                                </Text>
+                            </Button>
+                            <Button style={styles.button} primary onPress={() => this._onPressButton()}>
+                                <Text style={styles.buttonText}>
+                                    Sign in
+                                </Text>
+                            </Button>
+                        </View>
+                        <Text style={styles.break}>
+                            {"\n"}
+                        </Text>
+                        <View style={styles.border} />
+                        <Text style={styles.break}>
+                            {"\n"}
+                        </Text>
+                    </ScrollView>
                 </Image>
             </View>
         }
@@ -244,6 +359,17 @@ const styles = StyleSheet.create({
         height: null,
         flex: 1,
     },
+    content: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'transparent',
+    },
+    textList: {
+        fontSize: 18,
+        paddingLeft: 10,
+        paddingTop: 20,
+        backgroundColor: 'transparent',
+    }
 });
 
 export default Profile

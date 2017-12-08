@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Splash from './src/javascript/src/Splash';
-import PostDetail from './src/javascript/src/PostDetail';
-import ViewItem from './src/javascript/src/ViewItem';
+import Test1 from './src/javascript/src/Test1';
+import MapPicker from './src/javascript/src/MapPicker';
 
 
 export default class App extends React.Component {

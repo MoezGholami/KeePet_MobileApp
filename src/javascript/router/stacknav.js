@@ -6,8 +6,11 @@ import Register from '../src/Register';
 import Edit from '../src/Edit';
 import PostDetail from '../src/PostDetail';
 import ViewItem from  '../src/ViewItem';
+import MapPicker from '../src/MapPicker';
+import MyPost from '../src/MyPost';
 import TabNav from './tabnav';
 import TabNavProfile from './tabnavProfile';
+import MapViewItem from "../src/MapViewItem";
 
 const StackNav = StackNavigator({
     Home: {
@@ -77,6 +80,39 @@ const StackNav = StackNavigator({
     },
     ViewItem: {
         screen: ViewItem,
+        navigationOptions: ({navigation}) => ({
+            title: '',
+            headerTitleStyle: {bottom: 0},
+            headerStyle: {
+                backgroundColor: 'transparent',
+                position: 'absolute',
+            },
+        })
+    },
+    MapPicker: {
+        screen: MapPicker,
+        navigationOptions: ({navigation}) => ({
+            title: '',
+            headerTitleStyle: {bottom: 0},
+            headerStyle: {
+                backgroundColor: 'transparent',
+                position: 'absolute',
+            },
+        })
+    },
+    MyPost: {
+        screen: MyPost,
+        navigationOptions: ({navigation}) => ({
+            title: '',
+            headerTitleStyle: {bottom: 0},
+            headerStyle: {
+                backgroundColor: 'transparent',
+                position: 'absolute',
+            },
+        })
+    },
+    MapViewItem: {
+        screen: MapViewItem,
         navigationOptions: ({navigation}) => ({
             title: '',
             headerTitleStyle: {bottom: 0},

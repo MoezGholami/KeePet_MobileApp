@@ -3,7 +3,7 @@ import Moment from 'moment';
 import Constant from './Constant';
 import { CheckBox } from 'react-native-elements'
 import CalendarPicker from 'react-native-calendar-picker';
-import { Button, List, ListItem, Thumbnail, Body, SwipeRow, Icon } from 'native-base';
+import { Button as ButtonBase, List, ListItem, Thumbnail, Body, SwipeRow, Icon } from 'native-base';
 import IconEntypo from '@expo/vector-icons/Entypo';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {
@@ -15,6 +15,7 @@ import {
     ScrollView,
     TouchableOpacity,
     AsyncStorage,
+    Button,
 } from 'react-native';
 
 class Post extends Component<{}> {
@@ -34,6 +35,8 @@ class Post extends Component<{}> {
             isChecked: {},
             optionsNum: 3,
             optionNames: [],
+            lat: null,
+            lon: null,
         };
         this.onDateChange = this.onDateChange.bind(this);
     }
@@ -58,6 +61,31 @@ class Post extends Component<{}> {
         let sex = JSON.parse(await AsyncStorage.getItem('postPetSex'));
         let ageMonths = JSON.parse(await AsyncStorage.getItem('postPetAgeMonth'));
         let imageUrls = JSON.parse(await AsyncStorage.getItem('postPetUri'));
+        let locationPost = JSON.parse(await AsyncStorage.getItem('locationPost'));
+        let title = await AsyncStorage.getItem('postTitle');
+        let selectedStartDate = await AsyncStorage.getItem('selectedStartDate');
+        let selectedEndDate = await AsyncStorage.getItem('selectedEndDate');
+        let description = await AsyncStorage.getItem('postDescription');
+        if(title !== null) {
+            this.setState({
+                title: title,
+            })
+        }
+        if(selectedStartDate !== null) {
+            this.setState({
+                selectedStartDate: selectedStartDate,
+            })
+        }
+        if(selectedEndDate !== null) {
+            this.setState({
+                selectedEndDate: selectedEndDate,
+            })
+        }
+        if(description !== null) {
+            this.setState({
+                description: description,
+            })
+        }
         if(types !== null) {
             this.setState({
                 types: types,
@@ -86,6 +114,12 @@ class Post extends Component<{}> {
         if(imageUrls !== null) {
             this.setState({
                 imageUrls: imageUrls,
+            })
+        }
+        if(locationPost !== null) {
+            this.setState({
+                lat: locationPost.lat,
+                lon: locationPost.lon,
             })
         }
     }
@@ -146,31 +180,44 @@ class Post extends Component<{}> {
     }
 
     send = () => {
-        fetch(Constant.urlBase + 'owner/new_job_post_upload', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                startDate: this.state.selectedStartDate,
-                endDate: this.state.selectedEndDate,
-                description: this.state.description,
-                options: this.state.isChecked,
-                selectedPet: this.state.selectedPet,
-            })
-        })
-            .then((response) => {
-                console.log(response)
-                response.json()
-            })
-            .then((res) => {
-                console.log(res)
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-            .done()
+        // fetch(Constant.urlBase + 'owner/new_job_post_upload', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Accept': 'application/json',
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify({
+        //         startDate: this.state.selectedStartDate,
+        //         endDate: this.state.selectedEndDate,
+        //         description: this.state.description,
+        //         options: this.state.isChecked,
+        //         selectedPet: this.state.selectedPet,
+        //     })
+        // })
+        //     .then((response) => {
+        //         console.log(response)
+        //         response.json()
+        //     })
+        //     .then((res) => {
+        //         console.log(res)
+        //     })
+        //     .catch((error) => {
+        //         console.log(error)
+        //     })
+        //     .done()
+        AsyncStorage.removeItem('postPetType')
+        AsyncStorage.removeItem('postPetName')
+        AsyncStorage.removeItem('postPetBreed')
+        AsyncStorage.removeItem('postPetSex')
+        AsyncStorage.removeItem('postPetAgeMonth')
+        AsyncStorage.removeItem('postPetUri')
+        AsyncStorage.removeItem('locationPost')
+        AsyncStorage.removeItem('postTitle')
+        AsyncStorage.removeItem('selectedStartDate')
+        AsyncStorage.removeItem('selectedEndDate')
+        AsyncStorage.removeItem('postDescription')
+        AsyncStorage.removeItem('isChecked')
+        this.props.navigation.navigate('Profile');
     };
 
     render() {
@@ -180,6 +227,15 @@ class Post extends Component<{}> {
         const maxDate = new Date(2019, 1, 1);
         const startDate  =  selectedStartDate ? Moment(selectedStartDate).format('YYYY-MM-DD').toString() : '';
         const endDate = selectedEndDate ? Moment(selectedEndDate).format('YYYY-MM-DD').toString() : '';
+
+        if(this.state.title !== '')
+            AsyncStorage.setItem('postTitle', this.state.title);
+        if(this.state.selectedStartDate !== null)
+            AsyncStorage.setItem('selectedStartDate', this.state.selectedStartDate);
+        if(this.state.selectedEndDate !== null)
+            AsyncStorage.setItem('selectedEndDate', this.state.selectedEndDate);
+        if(this.state.description !== '')
+            AsyncStorage.setItem('postDescription', this.state.description);
 
         var checkBox = [];
         for(let i = 0; i < this.state.optionsNum; i++){
@@ -204,9 +260,9 @@ class Post extends Component<{}> {
                     leftOpenValue={75}
                     rightOpenValue={-75}
                     left={
-                        <Button success onPress={() => this._onPressEdit(i)}>
+                        <ButtonBase success onPress={() => this._onPressEdit(i)}>
                             <IconEntypo active name="edit" />
-                        </Button>
+                        </ButtonBase>
                     }
                     body={
                         <View style={styles.listItem}>
@@ -220,9 +276,9 @@ class Post extends Component<{}> {
                         </View>
                     }
                     right={
-                        <Button danger onPress={() => this._onPressDelete(i)}>
+                        <ButtonBase danger onPress={() => this._onPressDelete(i)}>
                             <Icon active name="trash" />
-                        </Button>
+                        </ButtonBase>
                     }
                 />
             )
@@ -263,6 +319,7 @@ class Post extends Component<{}> {
                                 <View style={styles.border} />
                                 <List>
                                     { listItem }
+
                                 </List>
 
                             </View>
@@ -308,6 +365,22 @@ class Post extends Component<{}> {
                                 {"\n"}
                             </Text>
                             <View style={styles.border} />
+                            <Text style={styles.break}>
+                                {"\n"}
+                            </Text>
+
+                            <Button
+                                title="Pick your location."
+                                onPress={this._pickLocation}
+                            />
+                            <View>
+                                <Text>latitude: { this.state.lat }</Text>
+                                <Text>longitude: { this.state.lon }</Text>
+                            </View>
+                            <Text style={styles.break}>
+                                {"\n"}
+                            </Text>
+                            <View style={styles.border} />
 
                             <Text style={styles.textSecond}>
                                 Select the add on selections
@@ -325,11 +398,11 @@ class Post extends Component<{}> {
                                 {"\n"}
                             </Text>
 
-                            <Button style={styles.button} primary onPress={ this.send }>
+                            <ButtonBase style={styles.button} primary onPress={ this.send }>
                                 <Text style={styles.buttonText}>
                                     post
                                 </Text>
-                            </Button>
+                            </ButtonBase>
 
                         </ScrollView>
                     </KeyboardAwareScrollView>
@@ -340,6 +413,10 @@ class Post extends Component<{}> {
 
     _onPressAdd = () => {
         this.props.navigation.navigate('PostDetail')
+    }
+
+    _pickLocation = () => {
+        this.props.navigation.navigate('MapPicker')
     }
 }
 
