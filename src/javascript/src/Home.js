@@ -20,7 +20,8 @@ class Home extends Component<{}> {
             loading: false,
             data: [],
             error: null,
-            refreshing: false
+            refreshing: false,
+            key: '',
         };
     }
 
@@ -46,6 +47,7 @@ class Home extends Component<{}> {
                 for(var i = 0;i < res.length;i++) {
                     res[i]['key'] = i;
                 }
+                AsyncStorage.setItem('allData', JSON.stringify(res));
                 this.setState({
                     data: res,
                     loading: false,
@@ -84,8 +86,26 @@ class Home extends Component<{}> {
     };
 
     renderHeader = () => {
-        return <SearchBar placeholder="Type Here..." lightTheme round />;
+        return <SearchBar
+            placeholder="Type Here..."
+            lightTheme
+            round
+            //value = {this.state.key}
+            onChangeText={(key) => this._onSearch(key)}
+        />;
     };
+
+    _onSearch = async(key) => {
+        this.setState({key: key});
+        let data = JSON.parse(await AsyncStorage.getItem('allData'));
+        let res = [];
+        for(let i = 0;i < data.length;i++) {
+            if(data[i].title.includes(key)) {
+                res.push(data[i])
+            }
+        }
+        this.setState({data: res});
+    }
 
     renderFooter = () => {
         if (!this.state.loading) return null;
@@ -103,15 +123,18 @@ class Home extends Component<{}> {
         );
     };
 
-    _onPressItem(key) {
-        AsyncStorage.setItem('userNameView', this.state.data[key].username);
-        AsyncStorage.setItem('emailView', this.state.data[key].email);
-        AsyncStorage.setItem('descriptionView', this.state.data[key].description);
-        AsyncStorage.setItem('startDateView', this.state.data[key].from);
-        AsyncStorage.setItem('endDateView', this.state.data[key].to);
-        AsyncStorage.setItem('petsInfoView', JSON.stringify(this.state.data[key].animals));
-        AsyncStorage.setItem('locationView', JSON.stringify(this.state.data[key].location));
-        this.props.navigation.navigate('ViewItem');
+    _onPressItem = async(key) => {
+        let data = JSON.parse(await AsyncStorage.getItem('allData'));
+        if(data !== null) {
+            AsyncStorage.setItem('userNameView', data[key].username);
+            AsyncStorage.setItem('emailView', data[key].email);
+            AsyncStorage.setItem('descriptionView', data[key].description);
+            AsyncStorage.setItem('startDateView', data[key].from);
+            AsyncStorage.setItem('endDateView', data[key].to);
+            AsyncStorage.setItem('petsInfoView', JSON.stringify(data[key].animals));
+            AsyncStorage.setItem('locationView', JSON.stringify(data[key].location));
+            this.props.navigation.navigate('ViewItem');
+        }
     };
 
     render() {
