@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { TabNavigator, TabView } from 'react-navigation'
 import { MaterialIcons, FontAwesome, Feather } from '@expo/vector-icons';
 import Home from '../src/Home';
-import Message from '../src/Message';
+import Map from '../src/Map';
 import Profile from '../src/Profile';
 
 const TabNavProfile = TabNavigator({
@@ -19,9 +19,9 @@ const TabNavProfile = TabNavigator({
         tabBarIcon:({ tintColor }) =>
             <FontAwesome name='home' size={32} color='#2980b9'/>,
     }},
-    Message: {screen: Message, navigationOptions: {
-        tabBarLable: 'Message',
-        title: "Message",
+    Map: {screen: Map, navigationOptions: {
+        tabBarLable: 'Map',
+        title: "Map",
         headerTitleStyle: {bottom: 0},
         headerStyle: {
             backgroundColor: 'transparent',
@@ -30,7 +30,7 @@ const TabNavProfile = TabNavigator({
             right: 0,
         },
         tabBarIcon:({ tintColor }) =>
-            <Feather name='message-circle' size={32} color='#2980b9'/>,
+            <FontAwesome name='map-marker' size={32} color='#2980b9'/>,
     }},
     Profile: {screen: Profile, navigationOptions: {
         tabBarLable: 'Profile',

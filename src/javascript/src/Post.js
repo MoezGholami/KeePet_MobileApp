@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Moment from 'moment';
 import Constant from './Constant';
+import { NavigationActions } from 'react-navigation';
 import { CheckBox } from 'react-native-elements'
 import CalendarPicker from 'react-native-calendar-picker';
 import { Button as ButtonBase, List, ListItem, Thumbnail, Body, SwipeRow, Icon } from 'native-base';
@@ -217,7 +218,12 @@ class Post extends Component<{}> {
         AsyncStorage.removeItem('selectedEndDate')
         AsyncStorage.removeItem('postDescription')
         AsyncStorage.removeItem('isChecked')
-        this.props.navigation.navigate('Profile');
+        this.props.navigation.dispatch(NavigationActions.reset({
+                index: 0,
+                actions: [NavigationActions.navigate({routeName: 'Profile'})]
+            })
+        )
+        // this.props.navigation.navigate('Profile');
     };
 
     render() {

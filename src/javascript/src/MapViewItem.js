@@ -35,8 +35,8 @@ class MapViewItem extends React.Component {
                 initialRegion={{
                     latitude: 30.290,
                     longitude: -97.731,
-                    latitudeDelta: 0.0922,
-                    longitudeDelta: 0.0421,
+                    latitudeDelta: 0.1822,
+                    longitudeDelta: 0.0821,
                 }}
             >
                 <MapView.Marker
