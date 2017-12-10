@@ -2,9 +2,11 @@ import React from 'react';
 import { MapView } from 'expo';
 import Constant from './Constant';
 import { Button as ButtonBase } from 'native-base';
+import { List, ListItem, SearchBar } from "react-native-elements";
 import {
     StyleSheet,
-    Text,
+    View,
+    Image,
     AsyncStorage,
 } from 'react-native';
 
@@ -56,8 +58,20 @@ class Map extends React.Component {
         AsyncStorage.setItem('startDateView', this.state.data[key].start_date);
         AsyncStorage.setItem('endDateView', this.state.data[key].end_date);
         AsyncStorage.setItem('petsInfoView', JSON.stringify(this.state.data[key].pets));
-        AsyncStorage.setItem('locationView', JSON.stringify({lat: this.state.data[key].owner.latitude, lon: this.state.data[key].owner.longitude}));
+        AsyncStorage.setItem('locationView', JSON.stringify({lat: this.state.data[key].latitude, lon: this.state.data[key].longitude}));
         this.props.navigation.navigate('ViewItem');
+    }
+
+    _onSearch = async(key) => {
+        this.setState({key: key});
+        let data = JSON.parse(await AsyncStorage.getItem('allData'));
+        let res = [];
+        for(let i = 0;i < data.length;i++) {
+            if(data[i].typeStr.toLowerCase().includes(key.toLowerCase())) {
+                res.push(data[i])
+            }
+        }
+        this.setState({data: res});
     }
 
     render() {
@@ -95,25 +109,35 @@ class Map extends React.Component {
             }
         }
         return (
-            <MapView
-                style={{ flex: 1 }}
-                showsUserLocation={true}
-                onCalloutPress={() => {
-                    if(this.state.flag) {
-                        this.setState({flag: false})
-                    } else {
-                        this.marker.showCallout()
-                    }
-                }}
-                initialRegion={{
-                    latitude: 30.290,
-                    longitude: -97.731,
-                    latitudeDelta: 0.1822,
-                    longitudeDelta: 0.0821,
-                }}
-            >
-                { Marker }
-            </MapView>
+            <Image style={styles.backgroundImage} source={require('../../image/main.jpg')}>
+                <View style={{flex: 1, marginTop: 64}}>
+                    <SearchBar
+                        placeholder="Type Here..."
+                        lightTheme
+                        round
+                        onChangeText={(key) => this._onSearch(key)}
+                    />
+                    <MapView
+                        style={{ flex: 1 }}
+                        showsUserLocation={true}
+                        onCalloutPress={() => {
+                            if(this.state.flag) {
+                                this.setState({flag: false})
+                            } else {
+                                this.marker.showCallout()
+                            }
+                        }}
+                        initialRegion={{
+                            latitude: 30.290,
+                            longitude: -97.731,
+                            latitudeDelta: 0.1822,
+                            longitudeDelta: 0.0821,
+                        }}
+                    >
+                        { Marker }
+                    </MapView>
+                </View>
+            </Image>
         );
     }
 }
@@ -129,6 +153,13 @@ const styles = StyleSheet.create({
     buttonText: {
         textAlign: 'center',
         color: '#FFFFFF',
+    },
+    backgroundImage: {
+        //justifyContent: 'center',
+        alignItems: 'stretch',
+        width: null,
+        height: null,
+        flex: 1,
     },
 });
 
