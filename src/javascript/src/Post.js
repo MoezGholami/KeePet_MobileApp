@@ -46,8 +46,8 @@ class Post extends Component<{}> {
     }
 
     componentWillMount() {
-        var isChecked = {'option1': true, 'option2': false, 'option3': false };
-        var optionNames = ['option1', 'option2', 'option3'];
+        var isChecked = {'Grooming': true, 'Music': false, 'Walking': false };
+        var optionNames = ['Grooming', 'Music', 'Walking'];
         this.setState({
             isChecked: isChecked,
             optionNames: optionNames,
@@ -226,8 +226,8 @@ class Post extends Component<{}> {
                 username: this.state.username,
                 email: this.state.email,
                 title: this.state.title,
-                from: this.state.selectedStartDate,
-                to: this.state.selectedEndDate,
+                start_date: this.state.selectedStartDate,
+                end_date: this.state.selectedEndDate,
                 description: this.state.description,
                 options: this.state.isChecked,
                 latitude: this.state.lat,

@@ -50,13 +50,13 @@ class Map extends React.Component {
     };
 
     _onPressCallout(key) {
-        AsyncStorage.setItem('userNameView', this.state.data[key].username);
-        AsyncStorage.setItem('emailView', this.state.data[key].email);
+        AsyncStorage.setItem('userNameView', this.state.data[key].owner.firstName + ' ' + this.state.data[key].owner.lastName);
+        AsyncStorage.setItem('emailView', this.state.data[key].owner.email);
         AsyncStorage.setItem('descriptionView', this.state.data[key].description);
-        AsyncStorage.setItem('startDateView', this.state.data[key].from);
-        AsyncStorage.setItem('endDateView', this.state.data[key].to);
-        AsyncStorage.setItem('petsInfoView', JSON.stringify(this.state.data[key].animals));
-        AsyncStorage.setItem('locationView', JSON.stringify({lat: this.state.data[key].latitude, lon: this.state.data[key].longitude}));
+        AsyncStorage.setItem('startDateView', this.state.data[key].start_date);
+        AsyncStorage.setItem('endDateView', this.state.data[key].end_date);
+        AsyncStorage.setItem('petsInfoView', JSON.stringify(this.state.data[key].pets));
+        AsyncStorage.setItem('locationView', JSON.stringify({lat: this.state.data[key].owner.latitude, lon: this.state.data[key].owner.longitude}));
         this.props.navigation.navigate('ViewItem');
     }
 
@@ -80,8 +80,8 @@ class Map extends React.Component {
                 Marker.push(
                     <MapView.Marker
                         key={i}
-                        title={this.state.data[i].title}
-                        description={this.state.data[i].description}
+                        title={this.state.data[i].owner.firstName + this.state.data[i].owner.lastName}
+                        description={this.state.data[i].owner.description}
                         coordinate={{
                             latitude: this.state.data[i].latitude,
                             longitude: this.state.data[i].longitude,

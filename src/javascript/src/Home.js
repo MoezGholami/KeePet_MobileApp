@@ -42,8 +42,8 @@ class Home extends Component<{}> {
                 for(var i = 0;i < res.length;i++) {
                     res[i]['key'] = i;
                     var t = '';
-                    for(var j = 0;j < res[i].animals.length;j++) {
-                        t = t + res[i].animals[j].type + ' ';
+                    for(var j = 0;j < res[i].pets.length;j++) {
+                        t = t + res[i].pets[j].type + ' ';
                     }
                     res[i]['typeStr'] = t;
                 }
@@ -127,12 +127,12 @@ class Home extends Component<{}> {
     _onPressItem = async(key) => {
         let data = JSON.parse(await AsyncStorage.getItem('allData'));
         if(data !== null) {
-            AsyncStorage.setItem('userNameView', data[key].username);
-            AsyncStorage.setItem('emailView', data[key].email);
+            AsyncStorage.setItem('userNameView', data[key].owner.firstName + ' ' + data[key].owner.lastName);
+            AsyncStorage.setItem('emailView', data[key].owner.email);
             AsyncStorage.setItem('descriptionView', data[key].description);
-            AsyncStorage.setItem('startDateView', data[key].from);
-            AsyncStorage.setItem('endDateView', data[key].to);
-            AsyncStorage.setItem('petsInfoView', JSON.stringify(data[key].animals));
+            AsyncStorage.setItem('startDateView', data[key].start_date);
+            AsyncStorage.setItem('endDateView', data[key].end_date);
+            AsyncStorage.setItem('petsInfoView', JSON.stringify(data[key].pets));
             AsyncStorage.setItem('locationView', JSON.stringify({lat: data[key].latitude, lon: data[key].longitude}));
             this.props.navigation.navigate('ViewItem');
         }
@@ -147,9 +147,9 @@ class Home extends Component<{}> {
                     renderItem={({ item }) => (
                         <ListItem
                             roundAvatar
-                            title={`${item.username} -- ${item.typeStr}` }
-                            subtitle={Moment(item.from).format('YYYY-MM-DD').toString() + ' - ' + Moment(item.to).format('YYYY-MM-DD')}
-                            avatar={{ uri: item.animals[0].image }}
+                            title={`${item.owner.firstName} ${item.owner.lastName} -- ${item.typeStr}` }
+                            subtitle={Moment(item.start_date).format('YYYY-MM-DD').toString() + ' - ' + Moment(item.end_date).format('YYYY-MM-DD')}
+                            avatar={{ uri: Constant.urlBase + item.pets[0].photo }}
                             containerStyle={{ borderBottomWidth: 0 }}
                             onPress={() => this._onPressItem(item.key)}
                         />

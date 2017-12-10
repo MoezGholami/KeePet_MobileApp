@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { NavigationActions } from 'react-navigation';
 import { List, ListItem } from "react-native-elements";
+import Moment from 'moment';
 import Constant from './Constant';
 import { Button } from 'native-base';
 import {
@@ -96,12 +97,12 @@ class Profile extends Component<{}> {
     };
 
     _onPressItem(key) {
-        AsyncStorage.setItem('userNameProfile', this.state.data[key].username);
-        AsyncStorage.setItem('emailProfile', this.state.data[key].email);
-        AsyncStorage.setItem('descriptionProfile', this.state.data[key].description);
-        AsyncStorage.setItem('startDateProfile', this.state.data[key].from);
-        AsyncStorage.setItem('endDateProfile', this.state.data[key].to);
-        AsyncStorage.setItem('petsInfoProfile', JSON.stringify(this.state.data[key].animals));
+        AsyncStorage.setItem('userNameProfile', this.state.data[key].owner.firstName + ' ' + this.state.data[key].owner.lastName);
+        AsyncStorage.setItem('emailProfile', this.state.data[key].owner.email);
+        AsyncStorage.setItem('descriptionProfile', this.state.data[key].owner.description);
+        AsyncStorage.setItem('startDateProfile', this.state.data[key].start_date);
+        AsyncStorage.setItem('endDateProfile', this.state.data[key].end_date);
+        AsyncStorage.setItem('petsInfoProfile', JSON.stringify(this.state.data[key].pets));
         this.props.navigation.navigate('MyPost');
     };
 
@@ -247,9 +248,9 @@ class Profile extends Component<{}> {
                                 renderItem={({ item }) => (
                                     <ListItem
                                         roundAvatar
-                                        title={`${item.title}`}
-                                        subtitle={item.username}
-                                        avatar={{ uri: item.animals[0].image }}
+                                        title={`${item.owner.firstName} ${item.owner.lastName} -- ${item.typeStr}` }
+                                        subtitle={Moment(item.start_date).format('YYYY-MM-DD').toString() + ' - ' + Moment(item.end_date).format('YYYY-MM-DD')}
+                                        avatar={{ uri: Constant.urlBase + item.pets[0].photo }}
                                         containerStyle={{ borderBottomWidth: 0 }}
                                         onPress={() => this._onPressItem(item.key)}
                                     />

@@ -76,7 +76,7 @@ class ViewItem extends Component<{}> {
                 <View key={i} style={styles.eachPet}>
                     <Image
                         style={styles.eachPetImage}
-                        source={{uri: this.state.petsInfo[i].image}}
+                        source={{uri: this.state.petsInfo[i].photo}}
                     />
                     <View style={styles.eachPetInfo}>
                         <Text style={styles.text}>
@@ -86,13 +86,13 @@ class ViewItem extends Component<{}> {
                             name: {this.state.petsInfo[i].name}
                         </Text>
                         <Text style={styles.text}>
-                            breed: {this.state.petsInfo[i].breed}
+                            breed: {this.state.petsInfo[i].breedName}
                         </Text>
                         <Text style={styles.text}>
                             sex: {this.state.petsInfo[i].sex}
                         </Text>
                         <Text style={styles.text}>
-                            age: {this.state.petsInfo[i].ageMonth}
+                            age: {this.state.petsInfo[i].age_month}
                         </Text>
                     </View>
                 </View>
