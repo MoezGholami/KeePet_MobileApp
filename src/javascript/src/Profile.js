@@ -116,13 +116,13 @@ class Profile extends Component<{}> {
     };
 
     _onPressItem(key) {
-        AsyncStorage.setItem('userNameProfile', this.state.data[key].owner.firstName + ' ' + this.state.data[key].owner.lastName);
-        AsyncStorage.setItem('emailProfile', this.state.data[key].owner.email);
-        AsyncStorage.setItem('descriptionProfile', this.state.data[key].owner.description);
-        AsyncStorage.setItem('startDateProfile', this.state.data[key].start_date);
-        AsyncStorage.setItem('endDateProfile', this.state.data[key].end_date);
-        AsyncStorage.setItem('petsInfoProfile', JSON.stringify(this.state.data[key].pets));
-        AsyncStorage.setItem('petsIDProfile', this.state.data[key]._id);
+        AsyncStorage.setItem('userNameProfile', this.state.dataTemp[key].owner.firstName + ' ' + this.state.dataTemp[key].owner.lastName);
+        AsyncStorage.setItem('emailProfile', this.state.dataTemp[key].owner.email);
+        AsyncStorage.setItem('descriptionProfile', this.state.dataTemp[key].owner.description);
+        AsyncStorage.setItem('startDateProfile', this.state.dataTemp[key].start_date);
+        AsyncStorage.setItem('endDateProfile', this.state.dataTemp[key].end_date);
+        AsyncStorage.setItem('petsInfoProfile', JSON.stringify(this.state.dataTemp[key].pets));
+        AsyncStorage.setItem('petsIDProfile', this.state.dataTemp[key]._id);
         this.props.navigation.navigate('MyPost');
     };
 
