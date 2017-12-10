@@ -214,6 +214,14 @@ class Post extends Component<{}> {
                 image: this.state.imageBase64[i],
             })
         }
+        let optionsRes = [];
+        let options = this.state.isChecked.keys();
+        while(options.next() !== null) {
+            if (this.state.isChecked[options.next().value])
+                optionsRes.push(options.next().value);
+            options = options.next();
+        }
+
         fetch(Constant.urlBase + 'owner/new_job_post_upload', {
             method: 'POST',
             headers: {
@@ -222,14 +230,14 @@ class Post extends Component<{}> {
             },
             body: JSON.stringify({
 
-                animals: animals,
+                pets: animals,
                 username: this.state.username,
                 email: this.state.email,
                 title: this.state.title,
                 start_date: this.state.selectedStartDate,
                 end_date: this.state.selectedEndDate,
                 description: this.state.description,
-                options: this.state.isChecked,
+                options: optionsRes,
                 latitude: this.state.lat,
                 longitude: this.state.lon,
                 //location: {lat: this.state.lat, lon: this.state.lon},

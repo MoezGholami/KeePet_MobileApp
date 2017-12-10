@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Moment from 'moment';
 import { Button as ButtonBase } from 'native-base';
+import { NavigationActions } from 'react-navigation';
 import {
     Text,
     View,
@@ -20,6 +21,7 @@ class MyPost extends Component<{}> {
             startDate: '',
             endDate: '',
             petsInfo: [],
+            id: '',
         }
     }
 
@@ -34,7 +36,10 @@ class MyPost extends Component<{}> {
         let startDate = await AsyncStorage.getItem('startDateProfile');
         let endDate = await AsyncStorage.getItem('endDateProfile');
         let petsInfo = JSON.parse(await AsyncStorage.getItem('petsInfoProfile'));
-        console.log(petsInfo);
+        let id = await AsyncStorage.getItem('petsIDProfile');
+        if(id !== null) {
+            this.setState({id: id});
+        }
         if(username !== null) {
             this.setState({username: username});
         }
@@ -59,6 +64,26 @@ class MyPost extends Component<{}> {
         AsyncStorage.removeItem('startDateProfile');
         AsyncStorage.removeItem('endDateProfile');
         AsyncStorage.removeItem('petsInfoProfile');
+    }
+
+    _onPressDelete = () => {
+        fetch(Constant.urlBase + 'owner/login/' + this.state.id, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
+            .then((response) => response.json())
+            .then((res) => {
+
+            })
+            .done()
+        this.props.navigation.dispatch(NavigationActions.reset({
+                index: 0,
+                actions: [NavigationActions.navigate({routeName: 'Profile'})]
+            })
+        )
     }
 
     render() {
@@ -112,7 +137,7 @@ class MyPost extends Component<{}> {
                             </Text>
                         </View>
                         {petsInfo}
-                        <ButtonBase danger style={{alignSelf: 'stretch', justifyContent: 'center', marginTop: 20}}>
+                        <ButtonBase danger onPress={this._onPressDelete} style={{alignSelf: 'stretch', justifyContent: 'center', marginTop: 20}}>
                             <Text>
                                 Delete
                             </Text>

@@ -61,7 +61,7 @@ class Map extends React.Component {
     }
 
     render() {
-        console.log(this.state.data)
+        //console.log(this.state.data)
         let Marker = []
         for(let i = 0;i <= this.state.data.length;i++) {
             if(i === this.state.data.length) {

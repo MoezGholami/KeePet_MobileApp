@@ -26,7 +26,9 @@ class Profile extends Component<{}> {
         picture: '',
         loading: false,
         data: [],
-        refreshing: false
+        dataTemp: [],
+        refreshing: false,
+        ID: [],
     };
 
     componentDidMount() {
@@ -34,19 +36,25 @@ class Profile extends Component<{}> {
         this.makeRemoteRequest();
     };
 
-    makeRemoteRequest = () => {
+    makeRemoteRequest = async() => {
         const { page, seed } = this.state;
         const url = Constant.urlBase+'owner/all_job_posts';
-        this.setState({ loading: true });
+        this.setState({ loading: false });
 
         fetch(url)
             .then(res => res.json())
             .then(res => {
                 for(var i = 0;i < res.length;i++) {
                     res[i]['key'] = i;
+                    var t = '';
+                    for(var j = 0;j < res[i].pets.length;j++) {
+                        t = t + res[i].pets[j].type + ' ';
+                    }
+                    res[i]['typeStr'] = t;
                 }
+
                 this.setState({
-                    data: res,
+                    //data: res,
                     loading: false,
                     refreshing: false,
                 })
@@ -103,6 +111,7 @@ class Profile extends Component<{}> {
         AsyncStorage.setItem('startDateProfile', this.state.data[key].start_date);
         AsyncStorage.setItem('endDateProfile', this.state.data[key].end_date);
         AsyncStorage.setItem('petsInfoProfile', JSON.stringify(this.state.data[key].pets));
+        AsyncStorage.setItem('petsIDProfile', this.state.data[key]._id);
         this.props.navigation.navigate('MyPost');
     };
 
@@ -125,7 +134,12 @@ class Profile extends Component<{}> {
         });
         AsyncStorage.getItem('email', (error, text)=>{
             if(text !== null) {
-                this.setState({email: text});
+                let temp = [];
+                for(let i = 0;i < this.state.dataTemp.length;i++) {
+                    if(this.state.dataTemp[i].owner.eamil === text)
+                        temp.push(this.state.dataTemp[i]);
+                }
+                this.setState({email: text, data: temp});
             }
         });
         AsyncStorage.getItem('bio', (error, text)=>{
@@ -136,6 +150,20 @@ class Profile extends Component<{}> {
         AsyncStorage.getItem('picture', (error, text)=>{
             if(text !== null) {
                 this.setState({picture: text});
+            }
+        });
+        AsyncStorage.getItem('allData', (error, text)=>{
+            if(text !== null) {
+                let data = JSON.parse(text);
+                if(this.state.email !== '') {
+                    let temp = [];
+                    for(let i = 0;i < data.length;i++) {
+                        if(data[i].owner.email === this.state.email)
+                            temp.push(data[i]);
+                    }
+                    this.setState({data: temp});
+                }
+                this.setState({dataTemp: data});
             }
         });
     };
@@ -176,7 +204,6 @@ class Profile extends Component<{}> {
     }
 
     render() {
-
         let profile = null;
         if(this.state.isLoggedIn) {
             profile = <View style={styles.container}>
