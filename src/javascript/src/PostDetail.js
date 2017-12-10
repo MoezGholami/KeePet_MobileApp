@@ -28,16 +28,16 @@ class PostDetail extends Component {
             sexNames: [],
             isPetChecked: {},
             isSexChecked: {},
-            petNum: 5,
+            petNum: 3,
             image: null,
             base64: null,
         };
     };
 
     componentWillMount() {
-        const typeNames = ['Dog', 'Cat', 'Fish', 'Bird', 'Reptile'];
+        const typeNames = ['Dog', 'Cat', 'Snake'];
         const sexNames = ['Male', 'Female'];
-        let isPetChecked = {'Dog': true, 'Cat': false, 'Fish': false, 'Bird':false, 'Reptile': false};
+        let isPetChecked = {'Dog': true, 'Cat': false, 'Snake': false};
         let isSexChecked = {'Male': true, 'Female': false};
         this.setState({
             typeNames: typeNames,

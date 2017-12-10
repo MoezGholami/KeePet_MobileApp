@@ -173,12 +173,14 @@ class Post extends Component<{}> {
         let sex = this.state.sex;
         let ageMonths = this.state.ageMonths;
         let imageUrls = this.state.imageUrls;
+        let imageBase64 = this.state.imageBase64;
         types.splice(key, 1);
         names.splice(key, 1);
         breeds.splice(key, 1);
         sex.splice(key, 1);
         ageMonths.splice(key, 1);
         imageUrls.splice(key, 1);
+        imageBase64.splice(key, 1);
         this.setState({
             types: types,
             names: names,
@@ -186,6 +188,7 @@ class Post extends Component<{}> {
             sex: sex,
             ageMonth: ageMonths,
             imageUrls: imageUrls,
+            imageBase64: imageBase64,
         });
         AsyncStorage.setItem('postPetType', JSON.stringify(types));
         AsyncStorage.setItem('postPetName', JSON.stringify(names));
@@ -193,6 +196,7 @@ class Post extends Component<{}> {
         AsyncStorage.setItem('postPetSex', JSON.stringify(sex));
         AsyncStorage.setItem('postPetAgeMonth', JSON.stringify(ageMonths));
         AsyncStorage.setItem('postPetUri', JSON.stringify(imageUrls));
+        AsyncStorage.setItem('postPetBase64', JSON.stringify(imageBase64));
     }
 
     _onPressEdit(key) {
@@ -214,15 +218,19 @@ class Post extends Component<{}> {
                 image: this.state.imageBase64[i],
             })
         }
-        let optionsRes = [];
-        let options = this.state.isChecked.keys();
-        while(options.next() !== null) {
-            if (this.state.isChecked[options.next().value])
-                optionsRes.push(options.next().value);
-            options = options.next();
-        }
+        console.log(this.state.isChecked);
+        var obj = this.state.isChecked;
+        var optionRes = Object.keys(obj).filter((a)=> {return obj[a];});
+        console.log(optionRes)
+        // let optionsRes = [];
+        // let options = this.state.isChecked.keys();
+        // while(options.next() !== null) {
+        //     if (this.state.isChecked[options.next().value])
+        //         optionsRes.push(options.next().value);
+        //     options = options.next();
+        // }
 
-        fetch(Constant.urlBase + 'owner/new_job_post_upload', {
+        fetch(Constant.urlBase + 'owner/insec_new_job_post_upload', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -231,13 +239,13 @@ class Post extends Component<{}> {
             body: JSON.stringify({
 
                 pets: animals,
-                username: this.state.username,
+                //username: this.state.username,
                 email: this.state.email,
-                title: this.state.title,
+                //title: this.state.title,
                 start_date: this.state.selectedStartDate,
                 end_date: this.state.selectedEndDate,
                 description: this.state.description,
-                options: optionsRes,
+                addons: optionRes,
                 latitude: this.state.lat,
                 longitude: this.state.lon,
                 //location: {lat: this.state.lat, lon: this.state.lon},
@@ -249,30 +257,30 @@ class Post extends Component<{}> {
             })
             .then((res) => {
                 console.log(res)
+                AsyncStorage.removeItem('postPetType')
+                AsyncStorage.removeItem('postPetName')
+                AsyncStorage.removeItem('postPetBreed')
+                AsyncStorage.removeItem('postPetSex')
+                AsyncStorage.removeItem('postPetAgeMonth')
+                AsyncStorage.removeItem('postPetUri')
+                AsyncStorage.removeItem('locationPost')
+                AsyncStorage.removeItem('postTitle')
+                AsyncStorage.removeItem('selectedStartDate')
+                AsyncStorage.removeItem('selectedEndDate')
+                AsyncStorage.removeItem('postDescription')
+                AsyncStorage.removeItem('postPetBase64')
+                AsyncStorage.removeItem('isChecked')
+                AsyncStorage.removeItem('allData')
+                this.props.navigation.dispatch(NavigationActions.reset({
+                        index: 0,
+                        actions: [NavigationActions.navigate({routeName: 'Profile'})]
+                    })
+                )
             })
             .catch((error) => {
                 console.log(error)
             })
             .done()
-
-        AsyncStorage.removeItem('postPetType')
-        AsyncStorage.removeItem('postPetName')
-        AsyncStorage.removeItem('postPetBreed')
-        AsyncStorage.removeItem('postPetSex')
-        AsyncStorage.removeItem('postPetAgeMonth')
-        AsyncStorage.removeItem('postPetUri')
-        AsyncStorage.removeItem('locationPost')
-        AsyncStorage.removeItem('postTitle')
-        AsyncStorage.removeItem('selectedStartDate')
-        AsyncStorage.removeItem('selectedEndDate')
-        AsyncStorage.removeItem('postDescription')
-        AsyncStorage.removeItem('postPetBase64')
-        AsyncStorage.removeItem('isChecked')
-        this.props.navigation.dispatch(NavigationActions.reset({
-                index: 0,
-                actions: [NavigationActions.navigate({routeName: 'Profile'})]
-            })
-        )
         // this.props.navigation.navigate('Profile');
     };
 

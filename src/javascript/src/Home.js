@@ -149,7 +149,7 @@ class Home extends Component<{}> {
                             roundAvatar
                             title={`${item.owner.firstName} ${item.owner.lastName} -- ${item.typeStr}` }
                             subtitle={Moment(item.start_date).format('YYYY-MM-DD').toString() + ' - ' + Moment(item.end_date).format('YYYY-MM-DD')}
-                            avatar={{ uri: Constant.urlBase + item.pets[0].photo }}
+                            avatar={{ uri: Constant.urlBase2 + item.pets[0].photo }}
                             containerStyle={{ borderBottomWidth: 0 }}
                             onPress={() => this._onPressItem(item.key)}
                         />

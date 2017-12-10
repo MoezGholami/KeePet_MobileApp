@@ -62,20 +62,20 @@ class Map extends React.Component {
         this.props.navigation.navigate('ViewItem');
     }
 
-    _onSearch = async(key) => {
-        this.setState({key: key});
-        let data = JSON.parse(await AsyncStorage.getItem('allData'));
-        let res = [];
-        for(let i = 0;i < data.length;i++) {
-            if(data[i].typeStr.toLowerCase().includes(key.toLowerCase())) {
-                res.push(data[i])
-            }
-        }
-        this.setState({data: res});
-    }
+    // _onSearch = async(key) => {
+    //     this.setState({key: key});
+    //     let data = JSON.parse(await AsyncStorage.getItem('allData'));
+    //     let res = [];
+    //     for(let i = 0;i < data.length;i++) {
+    //         if(data[i].typeStr.toLowerCase().includes(key.toLowerCase())) {
+    //             res.push(data[i])
+    //         }
+    //     }
+    //     this.setState({data: res});
+    // }
 
     render() {
-        //console.log(this.state.data)
+        // console.log(this.state.data[0].owner)
         let Marker = []
         for(let i = 0;i <= this.state.data.length;i++) {
             if(i === this.state.data.length) {
@@ -95,7 +95,7 @@ class Map extends React.Component {
                     <MapView.Marker
                         key={i}
                         title={this.state.data[i].owner.firstName + this.state.data[i].owner.lastName}
-                        description={this.state.data[i].owner.description}
+                        description={this.state.data[i].description}
                         coordinate={{
                             latitude: this.state.data[i].latitude,
                             longitude: this.state.data[i].longitude,
@@ -111,16 +111,16 @@ class Map extends React.Component {
         return (
             <Image style={styles.backgroundImage} source={require('../../image/main.jpg')}>
                 <View style={{flex: 1, marginTop: 64}}>
-                    <SearchBar
-                        placeholder="Type Here..."
-                        lightTheme
-                        round
-                        onChangeText={(key) => this._onSearch(key)}
-                    />
+                    {/*<SearchBar*/}
+                        {/*placeholder="Type Here..."*/}
+                        {/*lightTheme*/}
+                        {/*round*/}
+                        {/*onChangeText={(key) => this._onSearch(key)}*/}
+                    {/*/>*/}
                     <MapView
                         style={{ flex: 1 }}
                         showsUserLocation={true}
-                        onCalloutPress={() => {
+                        onMarkerPress={() => {
                             if(this.state.flag) {
                                 this.setState({flag: false})
                             } else {

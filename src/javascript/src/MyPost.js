@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Moment from 'moment';
+import Constant from './Constant';
 import { Button as ButtonBase } from 'native-base';
 import { NavigationActions } from 'react-navigation';
 import {
@@ -67,23 +68,26 @@ class MyPost extends Component<{}> {
     }
 
     _onPressDelete = () => {
-        fetch(Constant.urlBase + 'owner/login/' + this.state.id, {
+        console.log(this.state.id)
+        fetch(Constant.urlBase + 'owner/remove_job_post_api/' + this.state.id, {
             method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            }
+            // headers: {
+            //     'Accept': 'application/json',
+            //     'Content-Type': 'application/json',
+            // }
         })
             .then((response) => response.json())
             .then((res) => {
-
+                console.log(res)
+                alert('Your post is deleted.')
+                AsyncStorage.removeItem('allData')
+                this.props.navigation.dispatch(NavigationActions.reset({
+                        index: 0,
+                        actions: [NavigationActions.navigate({routeName: 'Profile'})]
+                    })
+                )
             })
             .done()
-        this.props.navigation.dispatch(NavigationActions.reset({
-                index: 0,
-                actions: [NavigationActions.navigate({routeName: 'Profile'})]
-            })
-        )
     }
 
     render() {
@@ -93,7 +97,7 @@ class MyPost extends Component<{}> {
                 <View key={i} style={styles.eachPet}>
                     <Image
                         style={styles.eachPetImage}
-                        source={{uri: this.state.petsInfo[i].photo}}
+                        source={{uri: Constant.urlBase2+this.state.petsInfo[i].photo}}
                     />
                     <View style={styles.eachPetInfo}>
                         <Text style={styles.text}>

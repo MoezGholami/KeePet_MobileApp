@@ -31,24 +31,24 @@ class Login extends Component<{}> {
                 </Image>
                 <View style={styles.content}>
                     <View style={styles.inputContainer}>
-                        <TextInput style={styles.input}
-                                   onChangeText={(username) => this.setState({username})}
-                                   value = {this.state.username}
-                                   placeholder='Username'>
-                        </TextInput>
-                        <TextInput style={styles.input}
-                                   onChangeText={(password) => this.setState({password})}
-                                   value = {this.state.password}
-                                   secureTextEntry={true}
-                                   placeholder='Password'>
-                        </TextInput>
-                        <View style={styles.buttonContainer}>
-                            <TouchableOpacity style={styles.button} onPress={ this.login }>
-                                <Text style={styles.buttonText}>
-                                    Log in
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
+                        {/*<TextInput style={styles.input}*/}
+                                   {/*onChangeText={(username) => this.setState({username})}*/}
+                                   {/*value = {this.state.username}*/}
+                                   {/*placeholder='Username'>*/}
+                        {/*</TextInput>*/}
+                        {/*<TextInput style={styles.input}*/}
+                                   {/*onChangeText={(password) => this.setState({password})}*/}
+                                   {/*value = {this.state.password}*/}
+                                   {/*secureTextEntry={true}*/}
+                                   {/*placeholder='Password'>*/}
+                        {/*</TextInput>*/}
+                        {/*<View style={styles.buttonContainer}>*/}
+                            {/*<TouchableOpacity style={styles.button} onPress={ this.login }>*/}
+                                {/*<Text style={styles.buttonText}>*/}
+                                    {/*Log in*/}
+                                {/*</Text>*/}
+                            {/*</TouchableOpacity>*/}
+                        {/*</View>*/}
                         <View style={styles.googleButton}>
                             <Icon.Button
                                 name='google'

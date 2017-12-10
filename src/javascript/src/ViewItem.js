@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Moment from 'moment';
+import Constant from './Constant';
 import { Button as ButtonBase } from 'native-base';
 import {
     Text,
@@ -76,7 +77,7 @@ class ViewItem extends Component<{}> {
                 <View key={i} style={styles.eachPet}>
                     <Image
                         style={styles.eachPetImage}
-                        source={{uri: this.state.petsInfo[i].photo}}
+                        source={{uri: Constant.urlBase2 + this.state.petsInfo[i].photo}}
                     />
                     <View style={styles.eachPetInfo}>
                         <Text style={styles.text}>

@@ -29,6 +29,7 @@ class Profile extends Component<{}> {
         dataTemp: [],
         refreshing: false,
         ID: [],
+        loading: false,
     };
 
     componentDidMount() {
@@ -52,7 +53,17 @@ class Profile extends Component<{}> {
                     }
                     res[i]['typeStr'] = t;
                 }
-
+                //AsyncStorage.setItem('allData', JSON.stringify(res));
+                let data = res;
+                if(this.state.email !== '') {
+                    let temp = [];
+                    for(let i = 0;i < data.length;i++) {
+                        if(data[i].owner.email === this.state.email)
+                            temp.push(data[i]);
+                    }
+                    this.setState({data: temp});
+                }
+                this.setState({dataTemp: data});
                 this.setState({
                     //data: res,
                     loading: false,
@@ -210,11 +221,11 @@ class Profile extends Component<{}> {
                 <Image style={styles.backgroundImage} source={require('../../image/main.jpg')}>
                     <ScrollView>
                         <View style={styles.buttonContainer}>
-                            <Button style={styles.button} primary onPress={() => this._onPressRegister()}>
-                                <Text style={styles.buttonText}>
-                                    Sign up
-                                </Text>
-                            </Button>
+                            {/*<Button style={styles.button} primary onPress={() => this._onPressRegister()}>*/}
+                                {/*<Text style={styles.buttonText}>*/}
+                                    {/*Sign up*/}
+                                {/*</Text>*/}
+                            {/*</Button>*/}
                             <Button style={styles.button} primary onPress={() => this._onPressButton()}>
                                 <Text style={styles.buttonText}>
                                     Sign out
@@ -256,11 +267,11 @@ class Profile extends Component<{}> {
                                     Post a Request
                                 </Text>
                             </Button>
-                            <Button style={styles.button2} primary onPress={() => this._onPressEdit()}>
-                                <Text style={styles.buttonText}>
-                                    Edit Profile
-                                </Text>
-                            </Button>
+                            {/*<Button style={styles.button2} primary onPress={() => this._onPressEdit()}>*/}
+                                {/*<Text style={styles.buttonText}>*/}
+                                    {/*Edit Profile*/}
+                                {/*</Text>*/}
+                            {/*</Button>*/}
                         </View>
                         <Text style={styles.break}>
                             {"\n"}
@@ -277,7 +288,7 @@ class Profile extends Component<{}> {
                                         roundAvatar
                                         title={`${item.owner.firstName} ${item.owner.lastName} -- ${item.typeStr}` }
                                         subtitle={Moment(item.start_date).format('YYYY-MM-DD').toString() + ' - ' + Moment(item.end_date).format('YYYY-MM-DD')}
-                                        avatar={{ uri: Constant.urlBase + item.pets[0].photo }}
+                                        avatar={{ uri: Constant.urlBase2 + item.pets[0].photo }}
                                         containerStyle={{ borderBottomWidth: 0 }}
                                         onPress={() => this._onPressItem(item.key)}
                                     />
@@ -300,11 +311,11 @@ class Profile extends Component<{}> {
                 <Image style={styles.backgroundImage} source={require('../../image/main.jpg')}>
                     <ScrollView>
                         <View style={styles.buttonContainer}>
-                            <Button style={styles.button} primary onPress={() => this._onPressRegister()}>
-                                <Text style={styles.buttonText}>
-                                    Sign up
-                                </Text>
-                            </Button>
+                            {/*<Button style={styles.button} primary onPress={() => this._onPressRegister()}>*/}
+                                {/*<Text style={styles.buttonText}>*/}
+                                    {/*Sign up*/}
+                                {/*</Text>*/}
+                            {/*</Button>*/}
                             <Button style={styles.button} primary onPress={() => this._onPressButton()}>
                                 <Text style={styles.buttonText}>
                                     Sign in
@@ -340,14 +351,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         height: 40,
         marginTop: 80,
-        width: '45%',
+        width: '100%',
     },
     button2: {
         backgroundColor: '#2980b9',
         justifyContent: 'center',
         height: 40,
         //alignSelf: 'center',
-        width: '45%',
+        width: '100%',
     },
     buttonText: {
         textAlign: 'center',
