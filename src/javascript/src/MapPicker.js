@@ -5,6 +5,7 @@ import {
     StyleSheet,
     Text,
     AsyncStorage,
+    View,
 } from 'react-native';
 
 class MapPicker extends React.Component {
@@ -31,6 +32,7 @@ class MapPicker extends React.Component {
 
     render() {
         return (
+            <View style={{flex: 1}}>
             <MapView
                 style={{ flex: 1 }}
                 showsUserLocation={true}
@@ -48,24 +50,24 @@ class MapPicker extends React.Component {
                     longitude: this.state.lon,
                     }}
                     />
+            </MapView>
                 <ButtonBase style={styles.button} primary onPress={() => this._onPressButton()}>
                     <Text>
                         Submit
                     </Text>
                 </ButtonBase>
-
-            </MapView>
+            </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
     button: {
-        position: 'absolute',
         bottom: 0,
         left: 0,
         right: 0,
         justifyContent: 'center',
+        alignSelf: 'stretch',
     },
     buttonText: {
         textAlign: 'center',

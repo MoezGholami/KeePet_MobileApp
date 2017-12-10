@@ -56,11 +56,12 @@ class Map extends React.Component {
         AsyncStorage.setItem('startDateView', this.state.data[key].from);
         AsyncStorage.setItem('endDateView', this.state.data[key].to);
         AsyncStorage.setItem('petsInfoView', JSON.stringify(this.state.data[key].animals));
-        AsyncStorage.setItem('locationView', JSON.stringify(this.state.data[key].location));
+        AsyncStorage.setItem('locationView', JSON.stringify({lat: this.state.data[key].latitude, lon: this.state.data[key].longitude}));
         this.props.navigation.navigate('ViewItem');
     }
 
     render() {
+        console.log(this.state.data)
         let Marker = []
         for(let i = 0;i <= this.state.data.length;i++) {
             if(i === this.state.data.length) {
@@ -82,8 +83,8 @@ class Map extends React.Component {
                         title={this.state.data[i].title}
                         description={this.state.data[i].description}
                         coordinate={{
-                            latitude: this.state.data[i].location.lat,
-                            longitude: this.state.data[i].location.lon,
+                            latitude: this.state.data[i].latitude,
+                            longitude: this.state.data[i].longitude,
                         }}
                         ref={this.setMarkerRef}
                         onCalloutPress={() => this._onPressCallout(i)}

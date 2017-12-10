@@ -38,6 +38,9 @@ class Post extends Component<{}> {
             optionNames: [],
             lat: null,
             lon: null,
+            imageBase64: [],
+            username: '',
+            email: '',
         };
         this.onDateChange = this.onDateChange.bind(this);
     }
@@ -62,11 +65,30 @@ class Post extends Component<{}> {
         let sex = JSON.parse(await AsyncStorage.getItem('postPetSex'));
         let ageMonths = JSON.parse(await AsyncStorage.getItem('postPetAgeMonth'));
         let imageUrls = JSON.parse(await AsyncStorage.getItem('postPetUri'));
+        let imageBase64 = JSON.parse(await AsyncStorage.getItem('postPetBase64'));
+        //console.log(imageUrls)
         let locationPost = JSON.parse(await AsyncStorage.getItem('locationPost'));
         let title = await AsyncStorage.getItem('postTitle');
         let selectedStartDate = await AsyncStorage.getItem('selectedStartDate');
         let selectedEndDate = await AsyncStorage.getItem('selectedEndDate');
         let description = await AsyncStorage.getItem('postDescription');
+        let username = await AsyncStorage.getItem('username');
+        let email = await AsyncStorage.getItem('email');
+        if(email !== null) {
+            this.setState({
+                email:email,
+            })
+        }
+        if(username !== username) {
+            this.setState({
+                username: username,
+            })
+        }
+        if(imageBase64 !== null) {
+            this.setState({
+                imageBase64: imageBase64,
+            })
+        }
         if(title !== null) {
             this.setState({
                 title: title,
@@ -181,31 +203,50 @@ class Post extends Component<{}> {
     }
 
     send = () => {
-        // fetch(Constant.urlBase + 'owner/new_job_post_upload', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Accept': 'application/json',
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify({
-        //         startDate: this.state.selectedStartDate,
-        //         endDate: this.state.selectedEndDate,
-        //         description: this.state.description,
-        //         options: this.state.isChecked,
-        //         selectedPet: this.state.selectedPet,
-        //     })
-        // })
-        //     .then((response) => {
-        //         console.log(response)
-        //         response.json()
-        //     })
-        //     .then((res) => {
-        //         console.log(res)
-        //     })
-        //     .catch((error) => {
-        //         console.log(error)
-        //     })
-        //     .done()
+        var animals = []
+        for(let i = 0;i < this.state.types.length;i++) {
+            animals.push({
+                type: this.state.types[i],
+                name: this.state.names[i],
+                breed: this.state.breeds[i],
+                sex: this.state.sex[i],
+                ageMonth: this.state.ageMonths[i],
+                image: this.state.imageBase64[i],
+            })
+        }
+        fetch(Constant.urlBase + 'owner/new_job_post_upload', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+
+                animals: animals,
+                username: this.state.username,
+                email: this.state.email,
+                title: this.state.title,
+                from: this.state.selectedStartDate,
+                to: this.state.selectedEndDate,
+                description: this.state.description,
+                options: this.state.isChecked,
+                latitude: this.state.lat,
+                longitude: this.state.lon,
+                //location: {lat: this.state.lat, lon: this.state.lon},
+            })
+        })
+            .then((response) => {
+                console.log(response)
+                response.json()
+            })
+            .then((res) => {
+                console.log(res)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+            .done()
+
         AsyncStorage.removeItem('postPetType')
         AsyncStorage.removeItem('postPetName')
         AsyncStorage.removeItem('postPetBreed')
@@ -217,6 +258,7 @@ class Post extends Component<{}> {
         AsyncStorage.removeItem('selectedStartDate')
         AsyncStorage.removeItem('selectedEndDate')
         AsyncStorage.removeItem('postDescription')
+        AsyncStorage.removeItem('postPetBase64')
         AsyncStorage.removeItem('isChecked')
         this.props.navigation.dispatch(NavigationActions.reset({
                 index: 0,

@@ -30,6 +30,7 @@ class PostDetail extends Component {
             isSexChecked: {},
             petNum: 5,
             image: null,
+            base64: null,
         };
     };
 
@@ -68,12 +69,13 @@ class PostDetail extends Component {
         let result = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: true,
             aspect: [4, 3],
+            base64: true,
         });
 
-        //console.log(result);
+        console.log(result);
 
         if (!result.cancelled) {
-            this.setState({ image: result.uri });
+            this.setState({ image: result.uri, base64: result.base64 });
         }
     };
 
@@ -84,6 +86,7 @@ class PostDetail extends Component {
         let postPetSex = JSON.parse(await AsyncStorage.getItem('postPetSex'));
         let postPetAgeMonth = JSON.parse(await AsyncStorage.getItem('postPetAgeMonth'));
         let postPetUri = JSON.parse(await AsyncStorage.getItem('postPetUri'));
+        let postPetBase64 = JSON.parse(await AsyncStorage.getItem('postPetBase64'));
         let isToEdit = JSON.parse(await AsyncStorage.getItem('isToEdit'));
         if(postPetName === null) {
             postPetType = [];
@@ -92,6 +95,7 @@ class PostDetail extends Component {
             postPetSex = [];
             postPetAgeMonth = [];
             postPetUri = [];
+            postPetBase64 = [];
         }
         if(isToEdit !== null) {
             postPetType[isToEdit] = this.state.type;
@@ -100,6 +104,7 @@ class PostDetail extends Component {
             postPetSex[isToEdit] = this.state.sex;
             postPetAgeMonth[isToEdit] = this.state.ageMonth;
             postPetUri[isToEdit] = this.state.image;
+            postPetBase64[isToEdit] = this.state.base64;
             AsyncStorage.removeItem('isToEdit');
         } else {
             postPetType.push(this.state.type);
@@ -108,6 +113,7 @@ class PostDetail extends Component {
             postPetSex.push(this.state.sex);
             postPetAgeMonth.push(this.state.ageMonth);
             postPetUri.push(this.state.image);
+            postPetBase64.push(this.state.base64);
         }
 
         AsyncStorage.setItem('postPetType', JSON.stringify(postPetType));
@@ -116,6 +122,7 @@ class PostDetail extends Component {
         AsyncStorage.setItem('postPetSex', JSON.stringify(postPetSex));
         AsyncStorage.setItem('postPetAgeMonth', JSON.stringify(postPetAgeMonth));
         AsyncStorage.setItem('postPetUri', JSON.stringify(postPetUri));
+        AsyncStorage.setItem('postPetBase64', JSON.stringify(postPetBase64));
         this.props.navigation.navigate('Post');
     };
 

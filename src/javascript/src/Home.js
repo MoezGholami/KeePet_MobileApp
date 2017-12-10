@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Constant from './Constant';
+import Moment from 'moment';
 import { NavigationActions } from 'react-navigation';
 import {
     Text,
@@ -38,15 +39,15 @@ class Home extends Component<{}> {
         fetch(url)
             .then(res => res.json())
             .then(res => {
-                // this.setState({
-                //     data: page === 1 ? res.results : [...this.state.data, ...res.results],
-                //     error: res.error || null,
-                //     loading: false,
-                //     refreshing: false
-                // });
                 for(var i = 0;i < res.length;i++) {
                     res[i]['key'] = i;
+                    var t = '';
+                    for(var j = 0;j < res[i].animals.length;j++) {
+                        t = t + res[i].animals[j].type + ' ';
+                    }
+                    res[i]['typeStr'] = t;
                 }
+                //console.log('ddd'+JSON.stringify(res));
                 AsyncStorage.setItem('allData', JSON.stringify(res));
                 this.setState({
                     data: res,
@@ -100,7 +101,7 @@ class Home extends Component<{}> {
         let data = JSON.parse(await AsyncStorage.getItem('allData'));
         let res = [];
         for(let i = 0;i < data.length;i++) {
-            if(data[i].title.includes(key)) {
+            if(data[i].typeStr.toLowerCase().includes(key.toLowerCase())) {
                 res.push(data[i])
             }
         }
@@ -132,7 +133,7 @@ class Home extends Component<{}> {
             AsyncStorage.setItem('startDateView', data[key].from);
             AsyncStorage.setItem('endDateView', data[key].to);
             AsyncStorage.setItem('petsInfoView', JSON.stringify(data[key].animals));
-            AsyncStorage.setItem('locationView', JSON.stringify(data[key].location));
+            AsyncStorage.setItem('locationView', JSON.stringify({lat: data[key].latitude, lon: data[key].longitude}));
             this.props.navigation.navigate('ViewItem');
         }
     };
@@ -146,8 +147,8 @@ class Home extends Component<{}> {
                     renderItem={({ item }) => (
                         <ListItem
                             roundAvatar
-                            title={`${item.title}`}
-                            subtitle={item.username}
+                            title={`${item.username} -- ${item.typeStr}` }
+                            subtitle={Moment(item.from).format('YYYY-MM-DD').toString() + ' - ' + Moment(item.to).format('YYYY-MM-DD')}
                             avatar={{ uri: item.animals[0].image }}
                             containerStyle={{ borderBottomWidth: 0 }}
                             onPress={() => this._onPressItem(item.key)}
